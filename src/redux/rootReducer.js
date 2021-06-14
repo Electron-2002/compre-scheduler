@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
+import tableReducer from './reducers/tableReducer';
 
 const rootReducer = combineReducers({
-    // Example auth: authReducer
+	table: tableReducer,
 });
 
 export default rootReducer;
