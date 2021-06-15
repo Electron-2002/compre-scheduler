@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../../utils/items';
 import { useDispatch } from 'react-redux';
 import { addBlock, addToTarget, deleteBlock, deleteFromTarget } from '../../redux/actions/tableActions';
-
+import './Block.css';
 const BlockTarget = ({ row, col, target, children }) => {
 	const dispatch = useDispatch();
 
@@ -35,13 +35,9 @@ const BlockTarget = ({ row, col, target, children }) => {
 	return (
 		<Box
 			ref={drop}
-			className="box"
+			className="box blockTarget"
 			style={{
 				background: isOver ? '#7986CB33' : '',
-				transitionDuration: '0.5s',
-				height: '100%',
-				width: '100%',
-				overflow: 'auto',
 			}}
 		>
 			{children}

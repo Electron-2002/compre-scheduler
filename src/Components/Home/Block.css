@@ -1,0 +1,73 @@
+.invigilatorSelect {
+	width: 70%;
+}
+.courseBox {
+	background: #9fa8da;
+	border-radius: 5px;
+	cursor: move;
+}
+.subject {
+	font-size: 16px;
+	font-weight: bold;
+	color: white;
+	text-align: left;
+	padding: 5px;
+}
+.instructor {
+	font-size: 12px;
+	background: white;
+	border-bottom: 1px solid #3f51b5;
+	color: #9fa8da;
+	text-align: left;
+	padding: 5px;
+	cursor: pointer;
+}
+.instructorOpen {
+	font-size: 12px;
+	color: white;
+	text-align: left;
+	padding-left: 4px;
+}
+.invigilator {
+	font-size: 12px;
+	text-align: left;
+	padding: 5px;
+	cursor: pointer;
+	background: white;
+	border-bottom: 1px solid #3f51b5;
+	color: #9fa8da;
+}
+.invigilatorOpen {
+	font-size: 12px;
+	color: white;
+	text-align: left;
+	padding-left: 4px;
+	padding-top: 5px;
+}
+.classroom {
+	font-size: 12px;
+	text-align: left;
+	padding: 5px;
+	padding-left: 5px;
+	cursor: pointer;
+	background: white;
+	border-bottom: 1px solid #3f51b5;
+	color: #9fa8da;
+}
+.totalStrenght {
+	font-size: 14px;
+	padding: 5px;
+	padding-left: 10px;
+	color: #9fa8da;
+	text-align: left;
+	margin-top: 0;
+	background: white;
+	border-radius: 0 0 5px 5px;
+	display: flex;
+}
+.blockTarget {
+	transition-duration: 0.5s;
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+}

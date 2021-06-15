@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,27 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import BlockTarget from './BlockTarget';
 import Block from './Block';
 import { useSelector } from 'react-redux';
-
-const StyledTableCell = withStyles((theme) => ({
-	head: {
-		backgroundColor: '#7986CB',
-		color: theme.palette.common.white,
-		minWidth: 200,
-		borderRight: '1px solid white',
-	},
-	body: {
-		fontSize: 14,
-		width: 200,
-		padding: 0,
-		height: 300,
-		borderRight: '1px solid grey',
-		borderBottom: '1px solid grey',
-	},
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-	root: {},
-}))(TableRow);
+import './Table.css';
 
 const useStyles = makeStyles({
 	table: {
@@ -50,64 +30,45 @@ const MainTable = () => {
 		<TableContainer component={Paper}>
 			<Table className={classes.table} aria-label="customized table">
 				<TableHead>
-					<TableRow>
-						<StyledTableCell width="100px">Slot</StyledTableCell>
-						{dates.map((el, i) => (
-							<StyledTableCell align="center" key={i}>
-								{el.formattedDate}
-							</StyledTableCell>
-						))}
-					</TableRow>
+					<TableCell className="styledTableCellHead" width="40px">
+						Dates
+					</TableCell>
+					{rows?.map((row, i) => (
+						<TableCell
+							width="100px"
+							component="th"
+							scope="row"
+							className="bg-blue p-20px cell-border-left styledTableCellHead"
+						>
+							{row.name}
+						</TableCell>
+					))}
 				</TableHead>
 				<TableBody>
-					{rows?.map((row, i) => (
-						<StyledTableRow key={row.name}>
-							<StyledTableCell
-								width="100px"
-								component="th"
-								scope="row"
-								style={{
-									padding: 20,
-									background: '#9FA8DA33',
-									borderLeft: '2px solid #9FA8DA',
-								}}
-							>
-								{row.name}
-							</StyledTableCell>
-							{row.data?.map((blocks, j) => (
-								<StyledTableCell key={j}>
-									<BlockTarget row={i} col={j} target="table">
-										{blocks?.map((group, index) => {
-											return group.courses?.length ? (
-												<div
-													key={index}
-													style={{
-														border: '1px solid #9FA8DA',
-														margin: 10,
-														background: '#9FA8DA33',
-														paddingBottom: 2,
-													}}
-												>
-													<div
-														style={{
-															background: '#9FA8DA',
-															textAlign: 'left',
-															padding: 5,
-															color: 'white',
-														}}
-													>
-														{group.courses[0].slot}
+					{dates.map((el, i) => (
+						<TableRow>
+							<TableCell className="styledTableCell" align="center" key={i}>
+								{el.formattedDate}
+							</TableCell>
+							{rows?.map((row, i) =>
+								row.data?.map((blocks, j) => (
+									<TableCell className="styledTableCell min-widht-200" key={j}>
+										<BlockTarget row={i} col={j} target="table" className="blockTarget">
+											{blocks?.map((group, index) => {
+												return group.courses?.length ? (
+													<div key={index} className="bg-blue m-10px">
+														<div className="slotCourseBox">{group.courses[0].slot}</div>
+														{group.courses.map((el, k) => {
+															return <Block data={el} row={i} col={j} key={k} />;
+														})}
 													</div>
-													{group.courses.map((el, k) => {
-														return <Block data={el} row={i} col={j} key={k} />;
-													})}
-												</div>
-											) : null;
-										})}
-									</BlockTarget>
-								</StyledTableCell>
-							))}
-						</StyledTableRow>
+												) : null;
+											})}
+										</BlockTarget>
+									</TableCell>
+								))
+							)}
+						</TableRow>
 					))}
 				</TableBody>
 			</Table>

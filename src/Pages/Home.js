@@ -17,7 +17,7 @@ const Home = () => {
 		<div>
 			<Navigation />
 			<Grid container>
-				<Grid item xs={2} style={{ overflow: 'auto', height: '92vh' }}>
+				<Grid item xs={2} className="sidebar-contaier">
 					<Sidebar />
 				</Grid>
 				<Grid item xs={10}>

@@ -5,14 +5,14 @@ import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../../utils/items';
 import { useDispatch } from 'react-redux';
 import { allotInvigilator, unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
-
+import './Block.css';
 const InvigilatorSelect = ({ data, index, row, col }) => {
 	const dispatch = useDispatch();
 
 	return (
 		<div>
 			<select
-				style={{ width: '70%' }}
+				className="invigilatorSelect"
 				onChange={(e) => {
 					dispatch(updateInvigilator(row, col, data, index, e.target.value));
 				}}
@@ -55,81 +55,24 @@ const Block = ({ data, row, col }) => {
 	const [instructorOpen, setInstructorOpen] = useState(false);
 
 	return (
-		<Box
-			ref={drag}
-			boxShadow={3}
-			margin="10px"
-			style={{
-				background: '#9FA8DA',
-				borderRadius: '5px',
-				opacity: isDragging ? '0.5' : '1',
-				cursor: 'move',
-			}}
-		>
-			<div
-				style={{
-					fontSize: 16,
-					fontWeight: 'bold',
-					color: 'white',
-					textAlign: 'left',
-					padding: 5,
-				}}
-			>
-				{data.name}
-			</div>
-			<div
-				style={{
-					fontSize: 12,
-					background: 'white',
-					borderBottom: '1px solid #3f51b5',
-					color: '#9FA8DA',
-					textAlign: 'left',
-					padding: 5,
-					cursor: 'pointer',
-				}}
-				onClick={() => setInstructorOpen(!instructorOpen)}
-			>
+		<Box ref={drag} boxShadow={3} margin="10px" className="courseBox" style={{ opacity: isDragging ? '0.5' : '1' }}>
+			<div className="subject">{data.name}</div>
+			<div className="instructor" onClick={() => setInstructorOpen(!instructorOpen)}>
 				Instructors ({data.instructors?.length || 0}) {instructorOpen ? '▲' : '▼'}
 			</div>
 			{instructorOpen ? (
-				<div
-					style={{
-						fontSize: 12,
-						color: 'white',
-						textAlign: 'left',
-						paddingLeft: 4,
-					}}
-				>
+				<div className="instructorOpen">
 					{data.instructors?.map((el) => {
 						return <div style={{ padding: 2, marginBottom: 2, marginTop: 2 }}>{el}</div>;
 					})}
 				</div>
 			) : null}
-			<div
-				style={{
-					fontSize: 12,
-					textAlign: 'left',
-					padding: 5,
-					cursor: 'pointer',
-					background: 'white',
-					borderBottom: '1px solid #3f51b5',
-					color: '#9FA8DA',
-				}}
-				onClick={() => setInvigilatorOpen(!invigilatorOpen)}
-			>
+			<div className="invigilator" onClick={() => setInvigilatorOpen(!invigilatorOpen)}>
 				Invigilators ({data.allotedInvigilators?.length}) {invigilatorOpen ? '▲' : '▼'}
 			</div>
 
 			{invigilatorOpen ? (
-				<div
-					style={{
-						fontSize: 12,
-						color: 'white',
-						textAlign: 'left',
-						paddingLeft: 4,
-						paddingTop: 5,
-					}}
-				>
+				<div className="invigilatorOpen">
 					{data.allotedInvigilators.map((el, index) => {
 						return <InvigilatorSelect data={data} index={index} row={row} col={col} />;
 					})}
@@ -155,35 +98,11 @@ const Block = ({ data, row, col }) => {
 				</div>
 			) : null}
 
-			<div
-				style={{
-					fontSize: 12,
-					textAlign: 'left',
-					padding: 5,
-					paddingLeft: 5,
-					cursor: 'pointer',
-					background: 'white',
-					borderBottom: '1px solid #3f51b5',
-					color: '#9FA8DA',
-				}}
-				onClick={() => {}}
-			>
+			<div className="classroom" onClick={() => {}}>
 				Classrooms ▼
 			</div>
 
-			<div
-				style={{
-					fontSize: 14,
-					padding: 5,
-					paddingLeft: 10,
-					color: '#9FA8DA',
-					textAlign: 'left',
-					marginTop: 0,
-					background: 'white',
-					borderRadius: '0 0 5px 5px',
-					display: 'flex',
-				}}
-			>
+			<div className="totalStrenght">
 				<Grid container direction="row" spacing={0}>
 					<Grid item>
 						<PeopleIcon fontSize="small"></PeopleIcon>

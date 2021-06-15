@@ -1,0 +1,22 @@
+.sidebar-content {
+	border: 1px solid #9fa8da;
+	margin: 10px;
+	background: #9fa8da33;
+	padding-bottom: 5px;
+}
+
+.sidebar-slots {
+	background: #9fa8da;
+	text-align: left;
+	padding: 5px;
+	color: white;
+}
+
+.head {
+	background-color: #bdc2de;
+	padding: 16px;
+	line-height: 1.4rem;
+}
+.sidebar {
+	background-color: #f8f9fd;
+}

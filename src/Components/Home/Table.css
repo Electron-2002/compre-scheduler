@@ -1,0 +1,36 @@
+.bg-blue {
+	background: #9fa8da33;
+}
+.p-20px {
+	padding: 20px;
+}
+.m-10px {
+	margin: 10px;
+}
+.cell-border-left {
+	border-left: 2px solid #9fa8da;
+}
+.slotCourseBox {
+	background: #9fa8da;
+	text-align: left;
+	padding: 5px;
+	color: white;
+}
+.blockTarget > div {
+	border: 1px solid #9fa8da;
+}
+.styledTableCellHead {
+	background-color: #7986cb;
+	color: white;
+	border-right: 1px solid white;
+}
+.styledTableCell {
+	font-size: 14px;
+	padding: 0;
+	height: 300px;
+	border-right: 1px solid grey;
+	border-bottom: 1px solid grey;
+}
+.min-widht-200 {
+	width: 200px;
+}
