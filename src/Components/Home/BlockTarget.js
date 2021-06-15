@@ -8,25 +8,44 @@ import './Block.css';
 const BlockTarget = ({ row, col, target, children }) => {
 	const dispatch = useDispatch();
 
-	const [{ isOver }, drop] = useDrop({
-		accept: ItemTypes.CARD,
-		drop: (item) => {
-			if (target === 'sidebar' && item.row === -1) {
+	const cardHandler = (course, r, c) => {
+		if (r === -1) {
+			dispatch(deleteBlock(course._id));
+		} else {
+			dispatch(deleteFromTarget(course.name, r, c));
+		}
+
+		if (target === 'table') {
+			dispatch(addToTarget(course, row, col));
+		} else {
+			dispatch(addBlock(course));
+		}
+	};
+
+	const dropHandler = (item) => {
+		if (target === 'sidebar' && item.row === -1) {
+			return;
+		}
+
+		switch (item.type) {
+			case ItemTypes.CARD:
+				cardHandler(item.data, item.row, item.col);
 				return;
-			}
 
-			if (item.row === -1) {
-				dispatch(deleteBlock(item.data._id));
-			} else {
-				dispatch(deleteFromTarget(item.data.name, item.row, item.col));
-			}
+			case ItemTypes.LIST:
+				item.data.forEach((course) => {
+					cardHandler(course, item.row, item.col);
+				});
+				return;
 
-			if (target === 'table') {
-				dispatch(addToTarget(item.data, row, col));
-			} else {
-				dispatch(addBlock(item.data));
-			}
-		},
+			default:
+				return;
+		}
+	};
+
+	const [{ isOver }, drop] = useDrop({
+		accept: [ItemTypes.CARD, ItemTypes.LIST],
+		drop: dropHandler,
 		collect: (monitor) => ({
 			isOver: !!monitor.isOver(),
 		}),

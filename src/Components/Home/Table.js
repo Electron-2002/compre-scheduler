@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import BlockTarget from './BlockTarget';
-import Block from './Block';
+import BlockList from './BlockList';
 import { useSelector } from 'react-redux';
 import './Table.css';
 
@@ -30,39 +30,44 @@ const MainTable = () => {
 		<TableContainer component={Paper}>
 			<Table className={classes.table} aria-label="customized table">
 				<TableHead>
-					<TableCell className="styledTableCellHead" width="40px">
-						Dates
-					</TableCell>
-					{rows?.map((row, i) => (
-						<TableCell
-							width="100px"
-							component="th"
-							scope="row"
-							className="bg-blue p-20px cell-border-left styledTableCellHead"
-						>
-							{row.name}
+					<TableRow>
+						<TableCell className="styledTableCellHead" width="40px">
+							Dates
 						</TableCell>
-					))}
+						{rows?.map((row, i) => (
+							<TableCell
+								key={i}
+								width="100px"
+								component="th"
+								scope="row"
+								className="bg-blue p-20px cell-border-left styledTableCellHead"
+							>
+								{row.name}
+							</TableCell>
+						))}
+					</TableRow>
 				</TableHead>
 				<TableBody>
 					{dates.map((el, i) => (
-						<TableRow>
-							<TableCell className="styledTableCell" align="center" key={i}>
+						<TableRow key={i}>
+							<TableCell className="styledTableCell" align="center">
 								{el.formattedDate}
 							</TableCell>
 							{rows?.map((row, i) =>
 								row.data?.map((blocks, j) => (
-									<TableCell className="styledTableCell min-widht-200" key={j}>
+									<TableCell className="styledTableCell min-width-200" key={j}>
 										<BlockTarget row={i} col={j} target="table" className="blockTarget">
 											{blocks?.map((group, index) => {
-												return group.courses?.length ? (
-													<div key={index} className="bg-blue m-10px">
-														<div className="slotCourseBox">{group.courses[0].slot}</div>
-														{group.courses.map((el, k) => {
-															return <Block data={el} row={i} col={j} key={k} />;
-														})}
-													</div>
-												) : null;
+												return (
+													group.courses?.length > 0 && (
+														<BlockList
+															courses={group.courses}
+															key={index}
+															row={i}
+															col={j}
+														/>
+													)
+												);
 											})}
 										</BlockTarget>
 									</TableCell>

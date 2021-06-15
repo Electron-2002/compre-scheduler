@@ -102,7 +102,7 @@ const Block = ({ data, row, col }) => {
 				Classrooms ▼
 			</div>
 
-			<div className="totalStrenght">
+			<div className="totalStrength">
 				<Grid container direction="row" spacing={0}>
 					<Grid item>
 						<PeopleIcon fontSize="small"></PeopleIcon>
