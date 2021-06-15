@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,16 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-// import BlockTarget from './BlockTarget';
+import BlockTarget from './BlockTarget';
 import Block from './Block';
 import { useSelector } from 'react-redux';
-
-export const TableContext = createContext({
-	deleteFromTarget: null,
-	addToTarget: null,
-	unAllotInvigilator: null,
-	updateInvigilator: null,
-});
 
 const StyledTableCell = withStyles((theme) => ({
 	head: {
@@ -59,8 +52,10 @@ const MainTable = () => {
 				<TableHead>
 					<TableRow>
 						<StyledTableCell width="100px">Slot</StyledTableCell>
-						{dates.map((el) => (
-							<StyledTableCell align="center">{el.formattedDate}</StyledTableCell>
+						{dates.map((el, i) => (
+							<StyledTableCell align="center" key={i}>
+								{el.formattedDate}
+							</StyledTableCell>
 						))}
 					</TableRow>
 				</TableHead>
@@ -80,44 +75,36 @@ const MainTable = () => {
 								{row.name}
 							</StyledTableCell>
 							{row.data?.map((blocks, j) => (
-								<StyledTableCell>
-									{/* <BlockTarget row={i} col={j} target="table">
-											{blocks?.map((group) => {
-												return group.courses?.length ? (
+								<StyledTableCell key={j}>
+									<BlockTarget row={i} col={j} target="table">
+										{blocks?.map((group, index) => {
+											return group.courses?.length ? (
+												<div
+													key={index}
+													style={{
+														border: '1px solid #9FA8DA',
+														margin: 10,
+														background: '#9FA8DA33',
+														paddingBottom: 2,
+													}}
+												>
 													<div
 														style={{
-															border: '1px solid #9FA8DA',
-															margin: 10,
-															background: '#9FA8DA33',
-															paddingBottom: 2,
+															background: '#9FA8DA',
+															textAlign: 'left',
+															padding: 5,
+															color: 'white',
 														}}
 													>
-														<div
-															style={{
-																background: '#9FA8DA',
-																textAlign: 'left',
-																padding: 5,
-																color: 'white',
-															}}
-														>
-															{group.courses[0].slot}
-														</div>
-														{group.courses.map((el) => {
-															return (
-																<div>HI</div>
-																// <Block
-																// 	data={el}
-																// 	allotInvigilator={allotInvigilator}
-																// 	unAllotInvigilator={unAllotInvigilator}
-																// 	row={i}
-																// 	col={j}
-																// />
-															);
-														})}
+														{group.courses[0].slot}
 													</div>
-												) : null;
-											})}
-										</BlockTarget> */}
+													{group.courses.map((el, k) => {
+														return <Block data={el} row={i} col={j} key={k} />;
+													})}
+												</div>
+											) : null;
+										})}
+									</BlockTarget>
 								</StyledTableCell>
 							))}
 						</StyledTableRow>

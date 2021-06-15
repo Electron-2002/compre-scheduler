@@ -11,13 +11,17 @@ const BlockTarget = ({ row, col, target, children }) => {
 	const [{ isOver }, drop] = useDrop({
 		accept: ItemTypes.CARD,
 		drop: (item) => {
+			if (target === 'sidebar' && item.row === -1) {
+				return;
+			}
+
 			if (item.row === -1) {
-				dispatch(deleteBlock(item.data.name));
+				dispatch(deleteBlock(item.data._id));
 			} else {
 				dispatch(deleteFromTarget(item.data.name, item.row, item.col));
 			}
 
-			if (target == 'table') {
+			if (target === 'table') {
 				dispatch(addToTarget(item.data, row, col));
 			} else {
 				dispatch(addBlock(item.data));
@@ -31,7 +35,7 @@ const BlockTarget = ({ row, col, target, children }) => {
 	return (
 		<Box
 			ref={drop}
-			class="box"
+			className="box"
 			style={{
 				background: isOver ? '#7986CB33' : '',
 				transitionDuration: '0.5s',

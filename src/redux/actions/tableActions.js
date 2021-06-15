@@ -72,25 +72,24 @@ export const addBlock = (course) => async (dispatch, getState) => {
 	dispatch({ type: ADD_BLOCK, payload: newBlocks });
 };
 
-export const deleteBlock = (name) => async (dispatch, getState) => {
+export const deleteBlock = (id) => async (dispatch, getState) => {
 	const blocks = getState().table.blocks;
-	console.log(blocks);
+
 	let newBlocks = blocks;
 
 	blocks.forEach((data, i) => {
 		data.courses.forEach((course, j) => {
-			if (course.name === name) {
+			if (course._id === id) {
 				const modCourses = blocks[i].courses.filter((_, index) => {
 					return index !== j;
 				});
 
-				newBlocks = blocks;
 				newBlocks[i] = { courses: modCourses };
-
-				dispatch({ type: DELETE_BLOCK, payload: newBlocks });
 			}
 		});
 	});
+
+	dispatch({ type: DELETE_BLOCK, payload: newBlocks });
 };
 
 export const addToTarget = (course, row, col) => async (dispatch, getState) => {

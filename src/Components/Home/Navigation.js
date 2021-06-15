@@ -9,8 +9,6 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
-import { useDispatch } from 'react-redux';
-import { deleteBlock, deleteFromTarget } from '../../redux/actions/tableActions';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -28,7 +26,7 @@ export default function MenuAppBar() {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
-	const dispatch = useDispatch();
+
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -44,12 +42,7 @@ export default function MenuAppBar() {
 					<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
 						<MenuIcon />
 					</IconButton>
-					<Button
-						style={{ color: 'white' }}
-						onClick={() => {
-							dispatch(deleteFromTarget('BIOF111', 1, 1));
-						}}
-					>
+					<Button style={{ color: 'white' }} onClick={() => {}}>
 						SAVE
 					</Button>
 					<Button style={{ color: 'white' }} onClick={() => {}}>
