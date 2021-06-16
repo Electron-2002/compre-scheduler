@@ -12,7 +12,7 @@ const BlockTarget = ({ row, col, target, children }) => {
 		if (r === -1) {
 			dispatch(deleteBlock(course._id));
 		} else {
-			dispatch(deleteFromTarget(course.name, r, c));
+			dispatch(deleteFromTarget(course._id, r, c));
 		}
 
 		if (target === 'table') {

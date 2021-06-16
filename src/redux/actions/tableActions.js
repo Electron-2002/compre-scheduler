@@ -119,7 +119,7 @@ export const addToTarget = (course, row, col) => async (dispatch, getState) => {
 	dispatch({ type: ADD_TO_TARGET, payload: newRows });
 };
 
-export const deleteFromTarget = (name, row, col) => async (dispatch, getState) => {
+export const deleteFromTarget = (id, row, col) => async (dispatch, getState) => {
 	const rows = getState().table.rows;
 
 	const blocks = rows[row].data[col];
@@ -128,7 +128,7 @@ export const deleteFromTarget = (name, row, col) => async (dispatch, getState) =
 	blocks.forEach((data, i) => {
 		data.courses &&
 			data.courses.forEach((course, j) => {
-				if (course.name === name) {
+				if (course._id === id) {
 					const modBlocks = blocks.filter((_, index) => {
 						return index !== i;
 					});
@@ -155,7 +155,7 @@ export const allotInvigilator = (row, col, data, invigilator) => async (dispatch
 	newBlocks.forEach((block, i) => {
 		if (block.courses && block.courses[0]?.slot === data.slot) {
 			block.courses.forEach((course, j) => {
-				if (data.name === course.name) {
+				if (data._id === course._id) {
 					course.allotedInvigilators.push(invigilator);
 				}
 			});
@@ -177,7 +177,7 @@ export const unAllotInvigilator = (row, col, data, index) => async (dispatch, ge
 	newBlocks.forEach((block) => {
 		if (block.courses && block.courses[0]?.slot === data.slot) {
 			block.courses.forEach((course) => {
-				if (data.name === course.name) {
+				if (data._id === course._id) {
 					let newAllotedArray = course.allotedInvigilators;
 					newAllotedArray.splice(index, 1);
 					course.allotedInvigilators = newAllotedArray;
@@ -201,7 +201,7 @@ export const updateInvigilator = (row, col, data, index, invigilator) => async (
 	newBlocks.forEach((block) => {
 		if (block.courses && block.courses[0]?.slot === data.slot) {
 			block.courses.forEach((course) => {
-				if (data.name === course.name) {
+				if (data._id === course._id) {
 					let newAllotedArray = course.allotedInvigilators;
 					newAllotedArray[index] = invigilator;
 					course.allotedInvigilators = newAllotedArray;
