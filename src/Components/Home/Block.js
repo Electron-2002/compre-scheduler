@@ -1,37 +1,76 @@
-import { Box, Grid } from '@material-ui/core';
+import { Box, Button, Grid, IconButton, Tooltip } from '@material-ui/core';
 import React, { useState } from 'react';
 import PeopleIcon from '@material-ui/icons/People';
 import { useDrag } from 'react-dnd';
+import InfoIcon from '@material-ui/icons/Info';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CheckIcon from '@material-ui/icons/Check';
 import { ItemTypes } from '../../utils/items';
 import { useDispatch } from 'react-redux';
 import { allotInvigilator, unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
-const InvigilatorSelect = ({ data, index, row, col }) => {
-	const dispatch = useDispatch();
 
+// Invigilator select component in future can be made a seperate component
+const InvigilatorSelect = ({ data, index, row, col }) => {
+	const [isSaved, setSave] = useState(false);
+	const [invigilatorData, setInvigilatorData] = useState({});
+	const dispatch = useDispatch();
+	const invigilators = ['Jajati Keshari', 'Amit Sethia', 'Anup Mathew', 'Neena'];
+	const classrooms = ['C301', 'C302', 'C402'];
 	return (
 		<div>
 			<select
 				className="invigilatorSelect"
 				onChange={(e) => {
-					dispatch(updateInvigilator(row, col, data, index, e.target.value));
+					setSave(false);
+					setInvigilatorData({ ...invigilatorData, invigilator: e.target.value });
 				}}
 			>
 				{data.recommendedInvigilators.map((el) => {
 					return <option value={el}>{el}</option>;
 				})}
-				<option disabled>-----------</option>
-				<option value="JAJATI KESHARI SAHOO">JAJATI KESHARI SAHOO</option>
-				<option value="AMIT SETIA">AMIT SETIA</option>
+				<option value="null">-----------</option>
+				{invigilators.map((el) => (
+					<option value={el}>{el}</option>
+				))}
 			</select>
-			<button
-				style={{ background: 'transparent' }}
-				onClick={() => {
-					dispatch(unAllotInvigilator(row, col, data, index));
+			<select
+				className="invigilatorSelect"
+				onChange={(e) => {
+					setSave(false);
+					setInvigilatorData({ ...invigilatorData, classroom: e.target.value });
 				}}
 			>
-				X
-			</button>
+				{data.recommendedInvigilators.map((el) => {
+					return <option value={el}>{el}</option>;
+				})}
+				<option value="null">-----------</option>
+				{classrooms.map((el) => (
+					<option value={el}>{el}</option>
+				))}
+			</select>
+			<Tooltip title="Tooltip" arrow placement="top-start">
+				<IconButton aria-label="info" size="small">
+					<InfoIcon fontSize="inherit" />
+				</IconButton>
+			</Tooltip>
+			<IconButton
+				aria-label="delete"
+				onClick={() => {
+					if (isSaved) {
+						dispatch(unAllotInvigilator(row, col, data, index));
+						setSave(false);
+					} else {
+						if (!invigilatorData.invigilator) return;
+						dispatch(updateInvigilator(row, col, data, index, ''));
+						console.log(invigilatorData);
+						setSave(true);
+					}
+				}}
+				size="small"
+			>
+				{isSaved ? <DeleteIcon fontSize="inherit" /> : <CheckIcon fontSize="inherit" />}
+			</IconButton>
 		</div>
 	);
 };
@@ -68,17 +107,19 @@ const Block = ({ data, row, col }) => {
 				</div>
 			) : null}
 			<div className="invigilator" onClick={() => setInvigilatorOpen(!invigilatorOpen)}>
-				Invigilators ({data.allotedInvigilators?.length}) {invigilatorOpen ? '▲' : '▼'}
+				Invigilators ({data.allotedInvigilators?.length}) : Classrooms {invigilatorOpen ? '▲' : '▼'}
 			</div>
 
 			{invigilatorOpen ? (
 				<div className="invigilatorOpen">
 					{data.allotedInvigilators.map((el, index) => {
-						return <InvigilatorSelect data={data} index={index} row={row} col={col} />;
+						return <InvigilatorSelect data={data} key={index} index={index} row={row} col={col} />;
 					})}
 					{row === -1 ? null : (
-						<button
-							style={{ background: 'transparent', marginBottom: 10 }}
+						<Button
+							variant="outlined"
+							size="small"
+							style={{ background: 'transparent', margin: 10 }}
 							onClick={() => {
 								dispatch(
 									allotInvigilator(
@@ -92,15 +133,15 @@ const Block = ({ data, row, col }) => {
 								);
 							}}
 						>
-							+ Add new
-						</button>
+							Add New
+						</Button>
 					)}
 				</div>
 			) : null}
 
-			<div className="classroom" onClick={() => {}}>
+			{/* <div className="classroom" onClick={() => {}}>
 				Classrooms ▼
-			</div>
+			</div> */}
 
 			<div className="totalStrength">
 				<Grid container direction="row" spacing={0}>
