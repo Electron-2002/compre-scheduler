@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,6 +8,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router-dom';
+
 const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
@@ -22,9 +24,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MenuAppBar(props) {
+	const { showSave, showExport } = props;
+
 	const classes = useStyles();
-	const [anchorEl, setAnchorEl] = React.useState(null);
+
+	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
+
+	const history = useHistory();
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -34,20 +41,21 @@ export default function MenuAppBar(props) {
 		setAnchorEl(null);
 	};
 
+	const exportHandler = () => {
+		history.push('/exports');
+	};
+
 	return (
 		<div className={classes.root}>
 			<AppBar position="static">
 				<Toolbar>
-					{/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-						<MenuIcon />
-					</IconButton> */}
-					{props.showSave && (
+					{showSave && (
 						<Button style={{ color: 'white' }} onClick={() => {}}>
 							SAVE
 						</Button>
 					)}
-					{props.showExport && (
-						<Button style={{ color: 'white' }} onClick={() => {}}>
+					{showExport && (
+						<Button style={{ color: 'white' }} onClick={exportHandler}>
 							EXPORT
 						</Button>
 					)}

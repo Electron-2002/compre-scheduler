@@ -1,21 +1,31 @@
-import { Button, Grid, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 import Navigation from '../Components/Home/Navigation';
 import DateFnsUtils from '@date-io/date-fns';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { useHistory } from 'react-router-dom';
 import './Home.css';
+
 const UserHome = () => {
 	const [startDate, setStartDate] = useState();
 	const [endDate, setEndDate] = useState();
+
+	const history = useHistory();
+
 	const handleStartDateChange = (date) => {
 		setStartDate(date);
 	};
+
 	const handleEndDateChange = (date) => {
 		setEndDate(date);
 	};
+
 	const createNew = () => {
-		window.location.href = '/create';
+		history.push('create');
 	};
+
 	return (
 		<div>
 			<Navigation />
@@ -76,7 +86,7 @@ const UserHome = () => {
 											label="No of Slots"
 										/>
 									</Grid>
-									<Grid iten xs={5} className="mt-auto">
+									<Grid item xs={5} className="mt-auto">
 										<Button variant="contained" color="primary" onClick={createNew}>
 											Create New Schedule
 										</Button>
