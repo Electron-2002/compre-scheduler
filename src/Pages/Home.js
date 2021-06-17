@@ -15,7 +15,7 @@ const Home = () => {
 
 	return (
 		<div>
-			<Navigation />
+			<Navigation showSave showExport />
 			<Grid container>
 				<Grid item xs={2} className="sidebar-contaier">
 					<Sidebar />

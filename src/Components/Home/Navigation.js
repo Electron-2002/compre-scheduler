@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function MenuAppBar() {
+export default function MenuAppBar(props) {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
@@ -41,12 +41,16 @@ export default function MenuAppBar() {
 					{/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
 						<MenuIcon />
 					</IconButton> */}
-					<Button style={{ color: 'white' }} onClick={() => {}}>
-						SAVE
-					</Button>
-					<Button style={{ color: 'white' }} onClick={() => {}}>
-						EXPORT
-					</Button>
+					{props.showSave && (
+						<Button style={{ color: 'white' }} onClick={() => {}}>
+							SAVE
+						</Button>
+					)}
+					{props.showExport && (
+						<Button style={{ color: 'white' }} onClick={() => {}}>
+							EXPORT
+						</Button>
+					)}
 					<Typography variant="h6" className={classes.title}>
 						COMPRE SCHEDULER
 					</Typography>
