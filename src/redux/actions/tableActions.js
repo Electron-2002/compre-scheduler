@@ -100,18 +100,21 @@ export const addToTarget = (course, row, col) => async (dispatch, getState) => {
 
 	if (blocks.length === 0) newBlocks = [{ courses: [course] }];
 
+	let flag = false;
 	blocks.forEach((data, i) => {
 		if (data.courses && data.courses[0]?.slot === course.slot) {
-			const modBlocks = blocks.filter((el, index) => {
-				return index !== i;
-			});
+			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, course];
-			newBlocks = [...modBlocks, { courses: modCourses }];
-		} else if (i === blocks.length - 1) {
-			newBlocks = [...blocks, { courses: [course] }];
+			newBlocks[i] = { courses: modCourses };
+
+			flag = true;
 		}
 	});
+
+	if (!flag) {
+		newBlocks = [...blocks, { courses: [course] }];
+	}
 
 	let newRows = [...rows];
 	newRows[row].data[col] = newBlocks;

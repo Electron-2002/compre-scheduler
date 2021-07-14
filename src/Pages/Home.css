@@ -25,3 +25,9 @@
 	position: absolute;
 	top: 25%;
 }
+
+.btn {
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+}

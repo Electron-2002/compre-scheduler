@@ -10,7 +10,7 @@ const Sidebar = () => {
 	return (
 		<BlockTarget target="sidebar" className="sidebar">
 			<div className="head">
-				<div>Unalloted</div>
+				<div>Blocks</div>
 			</div>
 			{table.blocks.map((group, i) => {
 				return group.courses?.length > 0 && <BlockList courses={group.courses} key={i} row={-1} col={-1} />;

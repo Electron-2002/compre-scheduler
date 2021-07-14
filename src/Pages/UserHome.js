@@ -86,7 +86,7 @@ const UserHome = () => {
 											label="No of Slots"
 										/>
 									</Grid>
-									<Grid item xs={5} className="mt-auto">
+									<Grid item xs={5} className="btn">
 										<Button variant="contained" color="primary" onClick={createNew}>
 											Create New Schedule
 										</Button>
