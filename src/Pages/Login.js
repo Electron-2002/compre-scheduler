@@ -1,22 +1,15 @@
 import { Button, Grid, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
-import backend from '../backend';
+import { useDispatch } from 'react-redux';
 import loginBanner from '../Images/loginBanner.svg';
+import { handleLogin } from '../redux/actions/loginActios';
 
 export const Login = () => {
 	const [loginForm, setLoginForm] = useState({});
-
+	const dispatch = useDispatch();
 	const handleChange = (e) => {
 		setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
 		console.log(loginForm);
-	};
-	const handleLogin = async (e) => {
-		try {
-			let response = await backend.post('/login', new URLSearchParams(loginForm));
-			console.log(response);
-		} catch (err) {
-			console.log(err);
-		}
 	};
 
 	return (
@@ -25,7 +18,13 @@ export const Login = () => {
 				<img src={loginBanner} alt="login" style={{ width: '100%' }} />
 			</Grid>
 			<Grid container direction="column" item md={4} className="login-form">
-				<form noValidate autoComplete="off">
+				<form
+					autoComplete="off"
+					onSubmit={(e) => {
+						e.preventDefault();
+						dispatch(handleLogin(loginForm));
+					}}
+				>
 					<Grid item>
 						<TextField
 							label="Username"
@@ -34,6 +33,7 @@ export const Login = () => {
 							className="loginInput"
 							onChange={handleChange}
 							name="email"
+							required
 						/>
 					</Grid>
 					<Grid item>
@@ -47,15 +47,10 @@ export const Login = () => {
 							className="loginInput"
 							onChange={handleChange}
 							name="password"
+							required
 						/>
 					</Grid>
-					<Button
-						variant="contained"
-						size="large"
-						color="primary"
-						onClick={handleLogin}
-						style={{ margin: '1rem' }}
-					>
+					<Button variant="contained" size="large" color="primary" type="submit" style={{ margin: '1rem' }}>
 						Login
 					</Button>
 				</form>
