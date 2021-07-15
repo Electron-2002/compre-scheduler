@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const backend = axios.create({
-	baseURL: 'https://nameless-sea-65364.herokuapp.com',
+	baseURL: 'http://68.183.45.22:5005',
 });
 
 export default backend;

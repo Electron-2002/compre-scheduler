@@ -2,14 +2,15 @@ import { Button, Grid, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import loginBanner from '../Images/loginBanner.svg';
-import { handleLogin } from '../redux/actions/loginActios';
+import { handleLogin } from '../redux/actions/loginActions';
 
 export const Login = () => {
 	const [loginForm, setLoginForm] = useState({});
+
 	const dispatch = useDispatch();
+
 	const handleChange = (e) => {
 		setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
-		console.log(loginForm);
 	};
 
 	return (
