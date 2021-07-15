@@ -49,12 +49,13 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 					<option value={el}>{el}</option>
 				))}
 			</select>
-			<Tooltip title="Tooltip" arrow placement="top-start">
+			<Tooltip title="Tooltip" arrow placement="top-start" style={{ width: '5%' }}>
 				<IconButton aria-label="info" size="small">
 					<InfoIcon fontSize="inherit" />
 				</IconButton>
 			</Tooltip>
 			<IconButton
+				style={{ width: '5%' }}
 				aria-label="delete"
 				onClick={() => {
 					if (isSaved) {
@@ -144,11 +145,12 @@ const Block = ({ data, row, col }) => {
 			</div> */}
 
 			<div className="totalStrength">
-				<Grid container direction="row" spacing={0}>
+				<Grid container direction="row" spacing={2}>
 					<Grid item>
 						<PeopleIcon fontSize="small"></PeopleIcon>
 					</Grid>
-					<Grid item> {' ' + data.capacity}</Grid>
+					<Grid item> Total : {' ' + data.capacity}</Grid>
+					<Grid item> Allotted : {' ' + data.capacity}</Grid>
 				</Grid>
 			</div>
 		</Box>

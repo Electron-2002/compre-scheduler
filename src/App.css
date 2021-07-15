@@ -4,3 +4,12 @@ body {
 .mt-auto {
 	margin-top: auto;
 }
+
+/* Login Page Css */
+.login-container {
+	align-content: center;
+	min-height: 100vh;
+}
+.loginInput {
+	width: 100%;
+}
