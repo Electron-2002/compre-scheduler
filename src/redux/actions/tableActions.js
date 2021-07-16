@@ -28,11 +28,6 @@ export const fetchData = () => async (dispatch) => {
 			exact: day,
 		}));
 
-		// days.forEach((day) => {
-		// 	rows[0].data = [...rows[0].data, day.an];
-		// 	rows[1].data = [...rows[1].data, day.fn];
-		// });
-
 		let blocks = [];
 		exams.forEach((exam) => {
 			let flag = false;
@@ -77,18 +72,21 @@ export const addBlock = (course) => async (dispatch, getState) => {
 	const blocks = getState().table.blocks;
 	let newBlocks = [];
 
+	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses[0].block === course.block) {
-			const modBlocks = blocks.filter((_, index) => {
-				return index !== i;
-			});
+		if (data.courses.length > 0 && data.courses[0].block === course.block) {
+			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, course];
-			newBlocks = [...modBlocks, { courses: modCourses }];
-		} else if (i === blocks.length - 1) {
-			newBlocks = [...blocks, { courses: [course] }];
+			newBlocks[i] = { courses: modCourses };
+
+			flag = true;
 		}
 	});
+
+	if (!flag) {
+		newBlocks = [...blocks, { courses: [course] }];
+	}
 
 	dispatch({ type: ADD_BLOCK, payload: newBlocks });
 };
@@ -117,12 +115,11 @@ export const addToTarget = (course, row, col) => async (dispatch, getState) => {
 	const rows = getState().table.rows;
 
 	const blocks = rows[row].data[col];
-	console.log(blocks, row, col);
 	let newBlocks = [];
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses[0].block === course.block) {
+		if (data.courses.length > 0 && data.courses[0].block === course.block) {
 			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, course];
