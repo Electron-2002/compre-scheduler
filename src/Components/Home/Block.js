@@ -1,5 +1,9 @@
-import { Box, Button, Grid, IconButton, Tooltip } from '@material-ui/core';
 import React, { useState } from 'react';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import PeopleIcon from '@material-ui/icons/People';
 import { useDrag } from 'react-dnd';
 import InfoIcon from '@material-ui/icons/Info';
@@ -10,13 +14,15 @@ import { useDispatch } from 'react-redux';
 import { allotInvigilator, unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-// Invigilator select component in future can be made a seperate component
 const InvigilatorSelect = ({ data, index, row, col }) => {
 	const [isSaved, setSave] = useState(false);
 	const [invigilatorData, setInvigilatorData] = useState({});
+
 	const dispatch = useDispatch();
+
 	const invigilators = ['Jajati Keshari', 'Amit Sethia', 'Anup Mathew', 'Neena'];
 	const classrooms = ['C301', 'C302', 'C402'];
+
 	return (
 		<div>
 			<select

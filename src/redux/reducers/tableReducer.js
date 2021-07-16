@@ -11,6 +11,7 @@ const initialState = {
 	blocks: [],
 	dates: [],
 	rows: [],
+	invigilators: [],
 };
 
 const tableReducer = (state = initialState, { type, payload }) => {
@@ -21,6 +22,7 @@ const tableReducer = (state = initialState, { type, payload }) => {
 				blocks: payload.blocks,
 				dates: payload.dates,
 				rows: payload.rows,
+				invigilators: payload.invigilators,
 			};
 
 		case ADD_BLOCK:

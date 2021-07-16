@@ -1,5 +1,5 @@
 import backend from '../../backend';
-import { dayIndex, getDatesArray } from '../../utils/days';
+import { changeDateFormat, formatDate, getDatesArray } from '../../utils/days';
 import {
 	ADD_BLOCK,
 	ADD_TO_TARGET,
@@ -24,7 +24,7 @@ export const fetchData = () => async (dispatch) => {
 		}
 
 		const dates = days.map((day) => ({
-			formatted: day.getDate() + '/' + day.getMonth() + ' ' + dayIndex[day.getDay()],
+			formatted: formatDate(day),
 			exact: day,
 		}));
 
@@ -55,12 +55,14 @@ export const fetchData = () => async (dispatch) => {
 			rows[1].data.push([]);
 		});
 
+		const invigilators = await backend.get('/invigilator/getAll');
 		dispatch({
 			type: FETCH_DATA,
 			payload: {
 				blocks,
 				dates,
 				rows,
+				invigilators: invigilators.data.invigilator,
 			},
 		});
 	} catch (e) {
@@ -69,15 +71,21 @@ export const fetchData = () => async (dispatch) => {
 };
 
 export const addBlock = (course) => async (dispatch, getState) => {
+	const finalCourse = {
+		...course,
+		date: null,
+		time: null,
+	};
+
 	const blocks = getState().table.blocks;
 	let newBlocks = [];
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses.length > 0 && data.courses[0].block === course.block) {
+		if (data.courses.length > 0 && data.courses[0].block === finalCourse.block) {
 			newBlocks = [...blocks];
 
-			const modCourses = [...blocks[i].courses, course];
+			const modCourses = [...blocks[i].courses, finalCourse];
 			newBlocks[i] = { courses: modCourses };
 
 			flag = true;
@@ -85,7 +93,7 @@ export const addBlock = (course) => async (dispatch, getState) => {
 	});
 
 	if (!flag) {
-		newBlocks = [...blocks, { courses: [course] }];
+		newBlocks = [...blocks, { courses: [finalCourse] }];
 	}
 
 	dispatch({ type: ADD_BLOCK, payload: newBlocks });
@@ -94,7 +102,7 @@ export const addBlock = (course) => async (dispatch, getState) => {
 export const deleteBlock = (id) => async (dispatch, getState) => {
 	const blocks = getState().table.blocks;
 
-	let newBlocks = blocks;
+	let newBlocks = [...blocks];
 
 	blocks.forEach((data, i) => {
 		data.courses.forEach((course, j) => {
@@ -112,6 +120,12 @@ export const deleteBlock = (id) => async (dispatch, getState) => {
 };
 
 export const addToTarget = (course, row, col) => async (dispatch, getState) => {
+	const finalCourse = {
+		...course,
+		date: changeDateFormat(getState().table.dates[row].exact),
+		time: row == 0 ? '9-12' : '2-5',
+	};
+
 	const rows = getState().table.rows;
 
 	const blocks = rows[row].data[col];
@@ -119,10 +133,10 @@ export const addToTarget = (course, row, col) => async (dispatch, getState) => {
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses.length > 0 && data.courses[0].block === course.block) {
+		if (data.courses.length > 0 && data.courses[0].block === finalCourse.block) {
 			newBlocks = [...blocks];
 
-			const modCourses = [...blocks[i].courses, course];
+			const modCourses = [...blocks[i].courses, finalCourse];
 			newBlocks[i] = { courses: modCourses };
 
 			flag = true;
@@ -130,7 +144,7 @@ export const addToTarget = (course, row, col) => async (dispatch, getState) => {
 	});
 
 	if (!flag) {
-		newBlocks = [...blocks, { courses: [course] }];
+		newBlocks = [...blocks, { courses: [finalCourse] }];
 	}
 
 	let newRows = [...rows];
@@ -155,7 +169,11 @@ export const deleteFromTarget = (id, row, col) => async (dispatch, getState) => 
 					const modCourses = blocks[i].courses.filter((_, index) => {
 						return index !== j;
 					});
-					newBlocks = [...modBlocks, { courses: modCourses }];
+					if (modCourses.length > 0) {
+						newBlocks = [...modBlocks, { courses: modCourses }];
+					} else {
+						newBlocks = [...modBlocks];
+					}
 				}
 			});
 	});
