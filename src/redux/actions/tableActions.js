@@ -1,5 +1,5 @@
 import backend from '../../backend';
-import { dayIndex } from '../../utils/days';
+import { dayIndex, getDatesArray } from '../../utils/days';
 import {
 	ADD_BLOCK,
 	ADD_TO_TARGET,
@@ -13,30 +13,49 @@ import {
 
 export const fetchData = () => async (dispatch) => {
 	try {
-		const result = await backend.get('/schedule/5f9aa9dc51c33560c0666e2e/T4');
-		const { schedule, blocks } = result.data[0];
+		const result = await backend.get('/schedule/1');
+		const { schedule, exams } = result.data;
 
-		const days = schedule.days;
+		const days = getDatesArray(schedule.start_date, schedule.end_date);
 
-		let dates = [];
-		const rows = [
-			{ name: 'Slot 1', data: [] },
-			{ name: 'Slot 2', data: [] },
-		];
+		let rows = [];
+		for (let i = 0; i < schedule.slots_each_day; ++i) {
+			rows.push({ name: `Slot ${i + 1}`, data: [] });
+		}
 
-		days.forEach((day) => {
-			const newDate = new Date(day.date);
-			const formattedDate = newDate.getDate() + '/' + newDate.getMonth() + ' ' + dayIndex[newDate.getDay()];
+		const dates = days.map((day) => ({
+			formatted: day.getDate() + '/' + day.getMonth() + ' ' + dayIndex[day.getDay()],
+			exact: day,
+		}));
 
-			const dateString = day.date;
-			const dateObj = {
-				formattedDate,
-				dateString,
-			};
+		// days.forEach((day) => {
+		// 	rows[0].data = [...rows[0].data, day.an];
+		// 	rows[1].data = [...rows[1].data, day.fn];
+		// });
 
-			dates = [...dates, dateObj];
-			rows[0].data = [...rows[0].data, day.an];
-			rows[1].data = [...rows[1].data, day.fn];
+		let blocks = [];
+		exams.forEach((exam) => {
+			let flag = false;
+			for (let i = 0; i < blocks.length; ++i) {
+				if (blocks[i].slot === exam.course.block) {
+					flag = true;
+				}
+			}
+
+			if (!flag) {
+				blocks.push({ slot: exam.course.block, courses: [] });
+			}
+		});
+
+		rows[0].data.push([{ courses: [exams[0].course] }, { courses: [exams[0].course] }]);
+		rows[1].data.push([]);
+
+		exams.forEach((exam) => {
+			for (let i = 0; i < blocks.length; ++i) {
+				if (blocks[i].slot === exam.course.block) {
+					blocks[i].courses.push(exam.course);
+				}
+			}
 		});
 
 		dispatch({

@@ -96,7 +96,7 @@ const Block = ({ data, row, col }) => {
 
 	return (
 		<Box ref={drag} boxShadow={3} margin="10px" className="courseBox" style={{ opacity: isDragging ? '0.5' : '1' }}>
-			<div className="subject">{data.name}</div>
+			<div className="subject">{data.bits_id}</div>
 			<div className="instructor" onClick={() => setInstructorOpen(!instructorOpen)}>
 				Instructors ({data.instructors?.length || 0}) {instructorOpen ? '▲' : '▼'}
 			</div>

@@ -48,13 +48,13 @@ const MainTable = () => {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{dates.map((el, i) => (
+					{dates.map((date, i) => (
 						<TableRow key={i}>
 							<TableCell className="styledTableCell" align="center">
-								{el.formattedDate}
+								{date.formatted}
 							</TableCell>
-							{rows?.map((row, i) =>
-								row.data?.map((blocks, j) => (
+							{rows?.map((row, i) => {
+								return row.data?.map((blocks, j) => (
 									<TableCell className="styledTableCell min-width-200" key={j}>
 										<BlockTarget row={i} col={j} target="table" className="blockTarget">
 											{blocks?.map((group, index) => {
@@ -71,8 +71,8 @@ const MainTable = () => {
 											})}
 										</BlockTarget>
 									</TableCell>
-								))
-							)}
+								));
+							})}
 						</TableRow>
 					))}
 				</TableBody>
