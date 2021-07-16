@@ -47,15 +47,17 @@ export const fetchData = () => async (dispatch) => {
 			}
 		});
 
-		rows[0].data.push([{ courses: [exams[0].course] }, { courses: [exams[0].course] }]);
-		rows[1].data.push([]);
-
 		exams.forEach((exam) => {
 			for (let i = 0; i < blocks.length; ++i) {
 				if (blocks[i].slot === exam.course.block) {
 					blocks[i].courses.push(exam.course);
 				}
 			}
+		});
+
+		dates.forEach(() => {
+			rows[0].data.push([]);
+			rows[1].data.push([]);
 		});
 
 		dispatch({
@@ -76,7 +78,7 @@ export const addBlock = (course) => async (dispatch, getState) => {
 	let newBlocks = [];
 
 	blocks.forEach((data, i) => {
-		if (data.courses[0]?.slot === course.slot) {
+		if (data.courses[0].block === course.block) {
 			const modBlocks = blocks.filter((_, index) => {
 				return index !== i;
 			});
@@ -98,7 +100,7 @@ export const deleteBlock = (id) => async (dispatch, getState) => {
 
 	blocks.forEach((data, i) => {
 		data.courses.forEach((course, j) => {
-			if (course._id === id) {
+			if (course.id === id) {
 				const modCourses = blocks[i].courses.filter((_, index) => {
 					return index !== j;
 				});
@@ -115,13 +117,12 @@ export const addToTarget = (course, row, col) => async (dispatch, getState) => {
 	const rows = getState().table.rows;
 
 	const blocks = rows[row].data[col];
+	console.log(blocks, row, col);
 	let newBlocks = [];
-
-	if (blocks.length === 0) newBlocks = [{ courses: [course] }];
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses && data.courses[0]?.slot === course.slot) {
+		if (data.courses[0].block === course.block) {
 			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, course];
@@ -150,7 +151,7 @@ export const deleteFromTarget = (id, row, col) => async (dispatch, getState) => 
 	blocks.forEach((data, i) => {
 		data.courses &&
 			data.courses.forEach((course, j) => {
-				if (course._id === id) {
+				if (course.id === id) {
 					const modBlocks = blocks.filter((_, index) => {
 						return index !== i;
 					});
@@ -175,9 +176,9 @@ export const allotInvigilator = (row, col, data, invigilator) => async (dispatch
 	const newBlocks = blocks;
 
 	newBlocks.forEach((block, i) => {
-		if (block.courses && block.courses[0]?.slot === data.slot) {
+		if (block.courses && block.courses[0]?.slot === data.courses[0].block) {
 			block.courses.forEach((course, j) => {
-				if (data._id === course._id) {
+				if (data.id === course.id) {
 					course.allotedInvigilators.push(invigilator);
 				}
 			});
@@ -197,9 +198,9 @@ export const unAllotInvigilator = (row, col, data, index) => async (dispatch, ge
 	const newBlocks = blocks;
 
 	newBlocks.forEach((block) => {
-		if (block.courses && block.courses[0]?.slot === data.slot) {
+		if (block.courses && block.courses[0]?.slot === data.courses[0].block) {
 			block.courses.forEach((course) => {
-				if (data._id === course._id) {
+				if (data.id === course.id) {
 					let newAllotedArray = course.allotedInvigilators;
 					newAllotedArray.splice(index, 1);
 					course.allotedInvigilators = newAllotedArray;
@@ -221,9 +222,9 @@ export const updateInvigilator = (row, col, data, index, invigilator) => async (
 	const newBlocks = blocks;
 
 	newBlocks.forEach((block) => {
-		if (block.courses && block.courses[0]?.slot === data.slot) {
+		if (block.courses && block.courses[0]?.slot === data.courses[0].block) {
 			block.courses.forEach((course) => {
-				if (data._id === course._id) {
+				if (data.id === course.id) {
 					let newAllotedArray = course.allotedInvigilators;
 					newAllotedArray[index] = invigilator;
 					course.allotedInvigilators = newAllotedArray;

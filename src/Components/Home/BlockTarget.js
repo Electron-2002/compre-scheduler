@@ -10,9 +10,9 @@ const BlockTarget = ({ row, col, target, children }) => {
 
 	const cardHandler = (course, r, c) => {
 		if (r === -1) {
-			dispatch(deleteBlock(course._id));
+			dispatch(deleteBlock(course.id));
 		} else {
-			dispatch(deleteFromTarget(course._id, r, c));
+			dispatch(deleteFromTarget(course.id, r, c));
 		}
 
 		if (target === 'table') {

@@ -53,26 +53,19 @@ const MainTable = () => {
 							<TableCell className="styledTableCell" align="center">
 								{date.formatted}
 							</TableCell>
-							{rows?.map((row, i) => {
-								return row.data?.map((blocks, j) => (
-									<TableCell className="styledTableCell min-width-200" key={j}>
-										<BlockTarget row={i} col={j} target="table" className="blockTarget">
-											{blocks?.map((group, index) => {
-												return (
-													group.courses?.length > 0 && (
-														<BlockList
-															courses={group.courses}
-															key={index}
-															row={i}
-															col={j}
-														/>
-													)
-												);
-											})}
-										</BlockTarget>
-									</TableCell>
-								));
-							})}
+							{rows?.map((row, j) => (
+								<TableCell className="styledTableCell min-width-200" key={j}>
+									<BlockTarget row={j} col={i} target="table" className="blockTarget">
+										{row.data[i]?.map((group, index) => {
+											return (
+												group.courses?.length > 0 && (
+													<BlockList courses={group.courses} key={index} row={j} col={i} />
+												)
+											);
+										})}
+									</BlockTarget>
+								</TableCell>
+							))}
 						</TableRow>
 					))}
 				</TableBody>

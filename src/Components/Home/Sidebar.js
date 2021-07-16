@@ -8,13 +8,15 @@ const Sidebar = () => {
 	const table = useSelector((state) => state.table);
 
 	return (
-		<BlockTarget target="sidebar" className="sidebar">
-			<div className="head">
-				<div>Blocks</div>
+		<BlockTarget target="sidebar">
+			<div className="sidebar">
+				<div className="head">
+					<div>Blocks</div>
+				</div>
+				{table.blocks.map((group, i) => {
+					return group.courses?.length > 0 && <BlockList courses={group.courses} key={i} row={-1} col={-1} />;
+				})}
 			</div>
-			{table.blocks.map((group, i) => {
-				return group.courses?.length > 0 && <BlockList courses={group.courses} key={i} row={-1} col={-1} />;
-			})}
 		</BlockTarget>
 	);
 };

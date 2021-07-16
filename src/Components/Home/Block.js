@@ -64,7 +64,6 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 					} else {
 						if (!invigilatorData.invigilator) return;
 						dispatch(updateInvigilator(row, col, data, index, ''));
-						console.log(invigilatorData);
 						setSave(true);
 					}
 				}}
