@@ -9,6 +9,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import backend from '../../backend';
+import { updateSchedule } from '../../redux/actions/tableActions';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -32,6 +35,7 @@ export default function MenuAppBar(props) {
 	const open = Boolean(anchorEl);
 
 	const history = useHistory();
+	const dispatch = useDispatch();
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -45,12 +49,16 @@ export default function MenuAppBar(props) {
 		history.push('/exports');
 	};
 
+	const saveHandler = () => {
+		dispatch(updateSchedule());
+	};
+
 	return (
 		<div className={classes.root}>
 			<AppBar position="static">
 				<Toolbar>
 					{showSave && (
-						<Button style={{ color: 'white' }} onClick={() => {}}>
+						<Button style={{ color: 'white' }} onClick={saveHandler}>
 							SAVE
 						</Button>
 					)}

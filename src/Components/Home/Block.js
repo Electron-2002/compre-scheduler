@@ -10,7 +10,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import { ItemTypes } from '../../utils/items';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { allotInvigilator, unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
@@ -20,8 +20,8 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 
 	const dispatch = useDispatch();
 
-	const invigilators = ['Jajati Keshari', 'Amit Sethia', 'Anup Mathew', 'Neena'];
-	const classrooms = ['C301', 'C302', 'C402'];
+	const invigilators = useSelector((state) => state.table.invigilators);
+	const classrooms = useSelector((state) => state.table.rooms);
 
 	return (
 		<div>
@@ -32,9 +32,9 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 					setInvigilatorData({ ...invigilatorData, invigilator: e.target.value });
 				}}
 			>
-				{data.recommendedInvigilators.map((el) => {
+				{/* {data.recommendedInvigilators.map((el) => {
 					return <option value={el}>{el}</option>;
-				})}
+				})} */}
 				<option value="null">-----------</option>
 				{invigilators.map((el) => (
 					<option value={el}>{el}</option>
@@ -47,9 +47,9 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 					setInvigilatorData({ ...invigilatorData, classroom: e.target.value });
 				}}
 			>
-				{data.recommendedInvigilators.map((el) => {
+				{/* {data.recommendedInvigilators.map((el) => {
 					return <option value={el}>{el}</option>;
-				})}
+				})} */}
 				<option value="null">-----------</option>
 				{classrooms.map((el) => (
 					<option value={el}>{el}</option>
@@ -101,7 +101,7 @@ const Block = ({ data, row, col }) => {
 
 	return (
 		<Box ref={drag} boxShadow={3} margin="10px" className="courseBox" style={{ opacity: isDragging ? '0.5' : '1' }}>
-			<div className="subject">{data.bits_id}</div>
+			<div className="subject">{data.course.bits_id}</div>
 			<div className="instructor" onClick={() => setInstructorOpen(!instructorOpen)}>
 				Instructors ({data.instructors?.length || 0}) {instructorOpen ? '▲' : '▼'}
 			</div>

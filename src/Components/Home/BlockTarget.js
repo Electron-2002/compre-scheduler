@@ -8,17 +8,17 @@ import './Block.css';
 const BlockTarget = ({ row, col, target, children }) => {
 	const dispatch = useDispatch();
 
-	const cardHandler = (course, r, c) => {
+	const cardHandler = (exam, r, c) => {
 		if (r === -1) {
-			dispatch(deleteBlock(course.id));
+			dispatch(deleteBlock(exam.course.id));
 		} else {
-			dispatch(deleteFromTarget(course.id, r, c));
+			dispatch(deleteFromTarget(exam.course.id, r, c));
 		}
 
 		if (target === 'table') {
-			dispatch(addToTarget(course, row, col));
+			dispatch(addToTarget(exam, row, col));
 		} else {
-			dispatch(addBlock(course));
+			dispatch(addBlock(exam));
 		}
 	};
 
