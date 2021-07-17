@@ -10,3 +10,11 @@ export const getDatesArray = (startDate, endDate) => {
 
 	return arr;
 };
+
+export const formatDate = (date) => {
+	return date.getDate() + '/' + date.getMonth() + ' ' + dayIndex[date.getDay()];
+};
+
+export const changeDateFormat = (date) => {
+	return date.toISOString().substr(0, 10) + ' ' + '00:00:00';
+};

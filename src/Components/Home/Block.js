@@ -1,22 +1,28 @@
-import { Box, Button, Grid, IconButton, Tooltip } from '@material-ui/core';
 import React, { useState } from 'react';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import PeopleIcon from '@material-ui/icons/People';
 import { useDrag } from 'react-dnd';
 import InfoIcon from '@material-ui/icons/Info';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import { ItemTypes } from '../../utils/items';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { allotInvigilator, unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-// Invigilator select component in future can be made a seperate component
 const InvigilatorSelect = ({ data, index, row, col }) => {
 	const [isSaved, setSave] = useState(false);
 	const [invigilatorData, setInvigilatorData] = useState({});
+
 	const dispatch = useDispatch();
-	const invigilators = ['Jajati Keshari', 'Amit Sethia', 'Anup Mathew', 'Neena'];
-	const classrooms = ['C301', 'C302', 'C402'];
+
+	const invigilators = useSelector((state) => state.table.invigilators);
+	const classrooms = useSelector((state) => state.table.rooms);
+
 	return (
 		<div>
 			<select
@@ -26,9 +32,9 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 					setInvigilatorData({ ...invigilatorData, invigilator: e.target.value });
 				}}
 			>
-				{data.recommendedInvigilators.map((el) => {
+				{/* {data.recommendedInvigilators.map((el) => {
 					return <option value={el}>{el}</option>;
-				})}
+				})} */}
 				<option value="null">-----------</option>
 				{invigilators.map((el) => (
 					<option value={el}>{el}</option>
@@ -41,9 +47,9 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 					setInvigilatorData({ ...invigilatorData, classroom: e.target.value });
 				}}
 			>
-				{data.recommendedInvigilators.map((el) => {
+				{/* {data.recommendedInvigilators.map((el) => {
 					return <option value={el}>{el}</option>;
-				})}
+				})} */}
 				<option value="null">-----------</option>
 				{classrooms.map((el) => (
 					<option value={el}>{el}</option>
@@ -95,7 +101,7 @@ const Block = ({ data, row, col }) => {
 
 	return (
 		<Box ref={drag} boxShadow={3} margin="10px" className="courseBox" style={{ opacity: isDragging ? '0.5' : '1' }}>
-			<div className="subject">{data.bits_id}</div>
+			<div className="subject">{data.course.bits_id}</div>
 			<div className="instructor" onClick={() => setInstructorOpen(!instructorOpen)}>
 				Instructors ({data.instructors?.length || 0}) {instructorOpen ? '▲' : '▼'}
 			</div>

@@ -19,7 +19,7 @@ const BlockList = ({ courses, row, col }) => {
 
 	return (
 		<div className="sidebar-content" ref={drag} style={{ opacity: isDragging ? '0.5' : '1' }}>
-			<div className="sidebar-slots">{courses[0].block}</div>
+			<div className="sidebar-slots">{courses[0].course.block}</div>
 			{courses.map((course, j) => {
 				return !course.state ? <Block data={course} row={row} col={col} key={j} /> : null;
 			})}
