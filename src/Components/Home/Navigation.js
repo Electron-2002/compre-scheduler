@@ -88,7 +88,14 @@ export default function MenuAppBar(props) {
 							onClose={handleClose}
 						>
 							<MenuItem onClick={handleClose}>Profile</MenuItem>
-							<MenuItem onClick={handleClose}>Log out</MenuItem>
+							<MenuItem
+								onClick={() => {
+									sessionStorage.removeItem('isLogin');
+									window.location.reload();
+								}}
+							>
+								Log out
+							</MenuItem>
 						</Menu>
 					</div>
 				</Toolbar>

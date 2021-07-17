@@ -7,12 +7,13 @@ import Exports from './Pages/Exports';
 import { Login } from './Pages/Login';
 
 const App = () => {
+	let isLogin = sessionStorage.getItem('isLogin');
+	if (!isLogin) return <Login />;
 	return (
 		<Switch>
 			<Route path="/" exact component={UserHome} />
 			<Route path="/create" exact component={Home} />
 			<Route path="/exports" exact component={Exports} />
-			<Route path="/login" exact component={Login} />
 		</Switch>
 	);
 };
