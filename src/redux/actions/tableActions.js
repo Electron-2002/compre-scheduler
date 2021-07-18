@@ -15,7 +15,6 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 	try {
 		const result = await backend.post(`/schedule/${scheduleId}`);
 		const { schedule, exams } = result.data;
-		console.log(exams.length);
 
 		const days = getDatesArray(schedule.start_date, schedule.end_date);
 
@@ -74,9 +73,9 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 	}
 };
 
-export const addBlock = (course) => async (dispatch, getState) => {
+export const addBlock = (exam) => async (dispatch, getState) => {
 	const finalCourse = {
-		...course,
+		...exam,
 		date: null,
 		time: null,
 	};
@@ -86,7 +85,7 @@ export const addBlock = (course) => async (dispatch, getState) => {
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses.length > 0 && data.courses[0].block === finalCourse.block) {
+		if (data.courses.length > 0 && data.courses[0].course.block === finalCourse.course.block) {
 			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, finalCourse];
@@ -280,7 +279,7 @@ export const updateSchedule = () => async (dispatch, getState) => {
 		console.log({
 			exams,
 		});
-		const result = await backend.put('/schedule/1', {
+		const result = await backend.put('/schedule/2', {
 			exams,
 		});
 		console.log(result);
