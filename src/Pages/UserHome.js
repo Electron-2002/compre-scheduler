@@ -12,10 +12,10 @@ import backend from '../backend';
 const UserHome = () => {
 	const userId = sessionStorage.getItem('userId');
 
-	const [startDate, setStartDate] = useState();
+	const [startDate, setStartDate] = useState(new Date());
 	const [userSchedules, setUserSchedules] = useState([]);
 	const [scheduleName, setScheduleName] = useState();
-	const [endDate, setEndDate] = useState();
+	const [endDate, setEndDate] = useState(new Date());
 	const [redirect, setRedirect] = useState(false);
 
 	const fetchUserSchedules = async () => {
@@ -46,7 +46,7 @@ const UserHome = () => {
 			start_date: startDate.toISOString(),
 			end_date: endDate.toISOString(),
 		};
-		await backend.post(`/schedule/${userId}`, new URLSearchParams(scheduleData));
+		await backend.post(`/schedule/create/${userId}`, new URLSearchParams(scheduleData));
 		fetchUserSchedules();
 		document.scheduleForm.reset();
 	};

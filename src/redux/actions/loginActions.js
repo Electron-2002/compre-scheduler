@@ -8,7 +8,7 @@ export const handleLogin = (loginForm) => async (dispatch) => {
 		sessionStorage.setItem('isLogin', true);
 		sessionStorage.setItem('userId', loginData.data.user[0].id);
 		await dispatch({ type: SET_LOGIN, payload: { isLogin, loginData: loginData.data.user[0] } });
-		window.location.reload();
+		window.location.href = '/';
 	} catch (err) {
 		console.log(err);
 	}
