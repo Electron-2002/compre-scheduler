@@ -11,9 +11,9 @@ import {
 	UPDATE_INVIGILATOR,
 } from '../reducers/tableReducer';
 
-export const fetchData = () => async (dispatch) => {
+export const fetchData = (scheduleId) => async (dispatch) => {
 	try {
-		const result = await backend.get('/schedule/1');
+		const result = await backend.post(`/schedule/${scheduleId}`);
 		const { schedule, exams } = result.data;
 		console.log(exams.length);
 

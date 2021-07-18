@@ -10,7 +10,6 @@ import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import backend from '../../backend';
 import { updateSchedule } from '../../redux/actions/tableActions';
 
 const useStyles = makeStyles((theme) => ({

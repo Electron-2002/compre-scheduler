@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Navigation from '../Components/Home/Navigation';
 import DateFnsUtils from '@date-io/date-fns';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import './Home.css';
 import backend from '../backend';
 
@@ -16,8 +16,7 @@ const UserHome = () => {
 	const [userSchedules, setUserSchedules] = useState([]);
 	const [scheduleName, setScheduleName] = useState();
 	const [endDate, setEndDate] = useState();
-
-	const history = useHistory();
+	const [redirect, setRedirect] = useState(false);
 
 	const fetchUserSchedules = async () => {
 		let response = await backend.post('/user/schedules', new URLSearchParams({ userId: userId }));
@@ -47,15 +46,20 @@ const UserHome = () => {
 			start_date: startDate.toISOString(),
 			end_date: endDate.toISOString(),
 		};
-		console.log(scheduleData);
 		await backend.post(`/schedule/${userId}`, new URLSearchParams(scheduleData));
 		fetchUserSchedules();
 		document.scheduleForm.reset();
-		// history.push('create');
 	};
 
 	return (
 		<div>
+			{redirect && (
+				<Redirect
+					to={{
+						pathname: `/create/${redirect}`,
+					}}
+				/>
+			)}
 			<Navigation />
 			<Grid container justify="space-around" className="main-container">
 				<Grid item xs={5}>
@@ -65,7 +69,12 @@ const UserHome = () => {
 					<Grid item xs={12} container className="savedSchedule">
 						{userSchedules.map((i, k) => (
 							<Grid item className="mt-auto" key={k}>
-								<Button className="savedScheduleButton" variant="contained" color="primary">
+								<Button
+									className="savedScheduleButton"
+									variant="contained"
+									color="primary"
+									onClick={() => setRedirect(i.id)}
+								>
 									{i.name}
 								</Button>
 							</Grid>

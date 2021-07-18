@@ -6,11 +6,12 @@ import Navigation from '../Components/Home/Navigation';
 import Table from '../Components/Home/Table';
 import Sidebar from '../Components/Home/Sidebar';
 
-const Home = () => {
+const Home = (props) => {
+	const scheduleId = props.match?.params?.scheduleId;
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(fetchData());
+		dispatch(fetchData(scheduleId));
 	}, [dispatch]);
 
 	return (
