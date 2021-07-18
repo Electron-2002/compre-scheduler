@@ -27,8 +27,8 @@ const MainTable = () => {
 	const dates = useSelector((state) => state.table.dates);
 
 	return (
-		<TableContainer component={Paper}>
-			<Table className={classes.table} aria-label="customized table">
+		<TableContainer style={{ height: 'calc(100vh - 64px)' }} component={Paper}>
+			<Table stickyHeader className={classes.table} aria-label="customized table">
 				<TableHead>
 					<TableRow>
 						<TableCell className="styledTableCellHead" width="40px">

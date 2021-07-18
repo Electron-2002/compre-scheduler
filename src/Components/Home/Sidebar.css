@@ -2,7 +2,16 @@
 	background-color: #bdc2de;
 	padding: 16px;
 	line-height: 1.4rem;
+	width: 100%;
+	position: fixed;
 }
 .sidebar {
 	background-color: #fff;
+}
+.sidebar-block {
+	padding-top: 50px;
+}
+.sidebar-container::-webkit-scrollbar,
+.blockTarget::-webkit-scrollbar {
+	display: none;
 }

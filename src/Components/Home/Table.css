@@ -20,8 +20,8 @@
 	border: 1px solid #9fa8da;
 }
 .styledTableCellHead {
-	background-color: #7986cb;
-	color: white;
+	background-color: #7986cb !important;
+	color: white !important;
 	border-right: 1px solid white;
 }
 .styledTableCell {

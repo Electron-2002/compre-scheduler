@@ -56,8 +56,8 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 			rows[1].data.push([]);
 		});
 
-		const invigilators = await backend.get('/invigilator/getAll');
-		const rooms = await backend.get('/room/getAll');
+		const invigilators = await backend.post('/invigilator/getAll');
+		const rooms = await backend.post('/room/getAll');
 
 		dispatch({
 			type: FETCH_DATA,
