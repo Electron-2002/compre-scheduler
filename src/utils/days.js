@@ -16,5 +16,12 @@ export const formatDate = (date) => {
 };
 
 export const changeDateFormat = (date) => {
-	return date.toISOString().substr(0, 10) + ' ' + '00:00:00';
+	return date.toISOString().substr(0, 10);
+};
+
+export const days_between = (date1, date2) => {
+	const ONE_DAY = 1000 * 60 * 60 * 24;
+	const differenceMs = Math.abs(new Date(date1) - new Date(date2));
+
+	return Math.round(differenceMs / ONE_DAY);
 };

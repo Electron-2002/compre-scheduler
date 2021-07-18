@@ -10,7 +10,7 @@ import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { updateSchedule } from '../../redux/actions/tableActions';
+import { logout, updateSchedule } from '../../redux/actions/tableActions';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -97,8 +97,7 @@ export default function MenuAppBar(props) {
 							<MenuItem onClick={handleClose}>Profile</MenuItem>
 							<MenuItem
 								onClick={() => {
-									sessionStorage.removeItem('isLogin');
-									window.location.reload();
+									dispatch(logout());
 								}}
 							>
 								Log out

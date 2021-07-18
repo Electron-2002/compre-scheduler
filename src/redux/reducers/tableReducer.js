@@ -6,8 +6,10 @@ export const ADD_TO_TARGET = 'ADD_TO_TARGET';
 export const ALLOT_INVIGILATOR = 'ALLOT_INVIGILATOR';
 export const UNALLOT_INVIGILATOR = 'UNALLOT_INVIGILATOR';
 export const UPDATE_INVIGILATOR = 'UPDATE_INVIGILATOR';
+export const LOGOUT = 'LOGOUT';
 
 const initialState = {
+	id: '',
 	blocks: [],
 	dates: [],
 	rows: [],
@@ -20,6 +22,7 @@ const tableReducer = (state = initialState, { type, payload }) => {
 		case FETCH_DATA:
 			return {
 				...state,
+				id: payload.id,
 				blocks: payload.blocks,
 				dates: payload.dates,
 				rows: payload.rows,
@@ -42,6 +45,17 @@ const tableReducer = (state = initialState, { type, payload }) => {
 			return {
 				...state,
 				rows: payload,
+			};
+
+		case LOGOUT:
+			return {
+				...state,
+				id: '',
+				blocks: [],
+				dates: [],
+				rows: [],
+				invigilators: [],
+				rooms: [],
 			};
 
 		default:

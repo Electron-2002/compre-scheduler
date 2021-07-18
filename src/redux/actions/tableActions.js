@@ -1,5 +1,5 @@
 import backend from '../../backend';
-import { changeDateFormat, formatDate, getDatesArray } from '../../utils/days';
+import { changeDateFormat, days_between, formatDate, getDatesArray } from '../../utils/days';
 import {
 	ADD_BLOCK,
 	ADD_TO_TARGET,
@@ -7,6 +7,7 @@ import {
 	DELETE_BLOCK,
 	DELETE_FROM_TARGET,
 	FETCH_DATA,
+	LOGOUT,
 	UNALLOT_INVIGILATOR,
 	UPDATE_INVIGILATOR,
 } from '../reducers/tableReducer';
@@ -42,17 +43,39 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 			}
 		});
 
-		exams.forEach((exam) => {
-			for (let i = 0; i < blocks.length; ++i) {
-				if (blocks[i].slot === exam.course.block) {
-					blocks[i].courses.push(exam);
-				}
-			}
-		});
-
 		dates.forEach(() => {
 			rows[0].data.push([]);
 			rows[1].data.push([]);
+		});
+
+		exams.forEach((exam) => {
+			for (let i = 0; i < blocks.length; ++i) {
+				if (blocks[i].slot === exam.course.block) {
+					if (exam.date != null) {
+						const r = exam.time === '9-12' ? 0 : 1;
+						const c = days_between(exam.date, schedule.start_date);
+
+						let flag = false;
+						rows[r].data[c].forEach((block, j) => {
+							if (block.slot === exam.course.block) {
+								rows[r].data[c][j].courses.push(exam);
+								flag = true;
+							}
+						});
+
+						if (!flag) {
+							rows[r].data[c].push({ slot: exam.course.block, courses: [exam] });
+						}
+						// if (rows[r].data[c].length === 0) {
+						// 	rows[r].data[c].push({ slot: exam.course.block, courses: [exam] });
+						// } else {
+						// 	rows[r].data[c] = [...rows[r].data[c], ]
+						// }
+					} else {
+						blocks[i].courses.push(exam);
+					}
+				}
+			}
 		});
 
 		const invigilators = await backend.post('/invigilator/getAll');
@@ -61,6 +84,7 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 		dispatch({
 			type: FETCH_DATA,
 			payload: {
+				id: scheduleId,
 				blocks,
 				dates,
 				rows,
@@ -114,7 +138,13 @@ export const deleteBlock = (id) => async (dispatch, getState) => {
 					return index !== j;
 				});
 
-				newBlocks[i] = { courses: modCourses };
+				if (modCourses.length > 0) {
+					newBlocks[i] = { slot: modCourses[0].course.block, courses: modCourses };
+				} else {
+					newBlocks = blocks.filter((_, index) => {
+						return index !== i;
+					});
+				}
 			}
 		});
 	});
@@ -125,7 +155,7 @@ export const deleteBlock = (id) => async (dispatch, getState) => {
 export const addToTarget = (exam, row, col) => async (dispatch, getState) => {
 	const finalCourse = {
 		...exam,
-		date: changeDateFormat(getState().table.dates[row].exact),
+		date: changeDateFormat(getState().table.dates[col].exact),
 		time: row === 0 ? '9-12' : '2-5',
 	};
 
@@ -136,7 +166,7 @@ export const addToTarget = (exam, row, col) => async (dispatch, getState) => {
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses.length > 0 && data.courses[0].course.block === finalCourse.course.block) {
+		if (data.courses?.length > 0 && data.courses[0].course.block === finalCourse.course.block) {
 			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, finalCourse];
@@ -276,14 +306,17 @@ export const updateSchedule = () => async (dispatch, getState) => {
 	});
 
 	try {
-		console.log({
+		const result = await backend.put(`/schedule/${getState().table.id}`, {
 			exams,
 		});
-		const result = await backend.put('/schedule/2', {
-			exams,
-		});
-		console.log(result);
+		window.location.reload();
 	} catch (e) {
-		console.log({ ...e });
+		console.log(e);
 	}
+};
+
+export const logout = () => (dispatch) => {
+	sessionStorage.removeItem('isLogin');
+	window.location.reload();
+	dispatch({ type: LOGOUT });
 };

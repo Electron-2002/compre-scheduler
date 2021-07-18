@@ -23,8 +23,9 @@ const useStyles = makeStyles({
 const MainTable = () => {
 	const classes = useStyles();
 
-	const rows = useSelector((state) => state.table.rows);
-	const dates = useSelector((state) => state.table.dates);
+	const table = useSelector((state) => state.table);
+	const rows = table.rows;
+	const dates = table.dates;
 
 	return (
 		<TableContainer style={{ height: 'calc(100vh - 64px)' }} component={Paper}>
@@ -57,6 +58,7 @@ const MainTable = () => {
 								<TableCell className="styledTableCell min-width-200" key={j}>
 									<BlockTarget row={j} col={i} target="table" className="blockTarget">
 										{row.data[i]?.map((group, index) => {
+											console.log(group);
 											return (
 												group.courses?.length > 0 && (
 													<BlockList courses={group.courses} key={index} row={j} col={i} />
