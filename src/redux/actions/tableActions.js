@@ -66,17 +66,14 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 						if (!flag) {
 							rows[r].data[c].push({ slot: exam.course.block, courses: [exam] });
 						}
-						// if (rows[r].data[c].length === 0) {
-						// 	rows[r].data[c].push({ slot: exam.course.block, courses: [exam] });
-						// } else {
-						// 	rows[r].data[c] = [...rows[r].data[c], ]
-						// }
 					} else {
 						blocks[i].courses.push(exam);
 					}
 				}
 			}
 		});
+
+		const courseList = exams.map((exam) => ({ id: exam.course.bits_id, name: exam.course.title }));
 
 		const invigilators = await backend.post('/invigilator/getAll');
 		const rooms = await backend.post('/room/getAll');
@@ -90,6 +87,7 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 				rows,
 				invigilators: invigilators.data.invigilator,
 				rooms: rooms.data.rooms,
+				courseList,
 			},
 		});
 	} catch (e) {
@@ -306,7 +304,7 @@ export const updateSchedule = () => async (dispatch, getState) => {
 	});
 
 	try {
-		const result = await backend.put(`/schedule/${getState().table.id}`, {
+		await backend.put(`/schedule/${getState().table.id}`, {
 			exams,
 		});
 		window.location.reload();
@@ -319,4 +317,20 @@ export const logout = () => (dispatch) => {
 	sessionStorage.removeItem('isLogin');
 	window.location.reload();
 	dispatch({ type: LOGOUT });
+};
+
+export const output1 = () => (_, getState) => {
+	window.open(`http://68.183.45.22:5005/output/one/${getState().table.id}`);
+};
+
+export const output2 = () => (_, getState) => {
+	window.open(`http://68.183.45.22:5005/output/two/${getState().table.id}`);
+};
+
+export const output3 = (course) => (_, getState) => {
+	console.log(course);
+};
+
+export const output4 = (inv) => (_, getState) => {
+	console.log(inv);
 };

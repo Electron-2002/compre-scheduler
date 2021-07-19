@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Navigation from '../Components/Home/Navigation';
 import './Home.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { output1, output2, output3, output4 } from '../redux/actions/tableActions';
 
-const exportData = [
+const data = [
 	{
 		title: 'Report in Excel',
 		desc: '(Course No., Title, Date, Time, Room list,\n No. of students in each room, No. of Invigilators Required, No. of Invigilators given)',
@@ -26,34 +32,157 @@ const exportData = [
 ];
 
 const Exports = () => {
+	const dispatch = useDispatch();
+
+	const courseList = useSelector((state) => state.table.courseList);
+	const invigilators = useSelector((state) => state.table.invigilators);
+
+	const [course, setCourse] = useState('');
+	const [invigilator, setInvigilator] = useState('');
+
+	const handleChangeCourse = (e) => {
+		setCourse(e.target.value);
+	};
+
+	const handleChangeInvigilator = (e) => {
+		setInvigilator(e.target.value);
+	};
+
 	return (
 		<div>
 			<Navigation />
 			<Grid container justify="space-around" className="main-container">
-				{exportData.map((obj) => (
-					<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
-						<Grid item xs={8}>
-							<Typography variant="body1">
-								<Box fontWeight="fontWeightBold" marginBottom={1}>
-									{obj.title}
-								</Box>
-								<Box fontSize={14}>
-									{obj.desc.split('\n').map((i) => (
-										<>
-											{i}
-											<br />
-										</>
-									))}
-								</Box>
-							</Typography>
-						</Grid>
-						<Grid item xs={3} className="mt-auto">
-							<Button className="savedScheduleButton" variant="contained" color="primary">
-								Export
-							</Button>
-						</Grid>
+				<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
+					<Grid item xs={8}>
+						<Typography variant="body1">
+							<Box fontWeight="fontWeightBold" marginBottom={1}>
+								{data[0].title}
+							</Box>
+							<Box fontSize={14}>
+								{data[0].desc.split('\n').map((text) => (
+									<>
+										{text}
+										<br />
+									</>
+								))}
+							</Box>
+						</Typography>
 					</Grid>
-				))}
+					<Grid item xs={3} className="mt-auto">
+						<Button
+							className="savedScheduleButton"
+							variant="contained"
+							color="primary"
+							onClick={() => dispatch(output1())}
+						>
+							Export
+						</Button>
+					</Grid>
+				</Grid>
+
+				<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
+					<Grid item xs={8}>
+						<Typography variant="body1">
+							<Box fontWeight="fontWeightBold" marginBottom={1}>
+								{data[1].title}
+							</Box>
+							<Box fontSize={14}>
+								{data[1].desc.split('\n').map((text) => (
+									<>
+										{text}
+										<br />
+									</>
+								))}
+							</Box>
+						</Typography>
+					</Grid>
+					<Grid item xs={3} className="mt-auto">
+						<Button
+							className="savedScheduleButton"
+							variant="contained"
+							color="primary"
+							onClick={() => dispatch(output2())}
+						>
+							Export
+						</Button>
+					</Grid>
+				</Grid>
+
+				<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
+					<Grid item xs={8}>
+						<Typography variant="body1">
+							<Box fontWeight="fontWeightBold" marginBottom={1}>
+								{data[2].title}
+							</Box>
+							<Box fontSize={14}>
+								{data[2].desc.split('\n').map((text) => (
+									<>
+										{text}
+										<br />
+									</>
+								))}
+							</Box>
+						</Typography>
+						<FormControl fullWidth margin="dense">
+							<InputLabel>Course</InputLabel>
+							<Select value={course} onChange={handleChangeCourse}>
+								{courseList.map((course) => (
+									<MenuItem value={course.id} key={course.id}>
+										{course.id}: {course.name}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={3} className="mt-auto">
+						<Button
+							className="savedScheduleButton"
+							variant="contained"
+							color="primary"
+							onClick={() => dispatch(output3(course))}
+						>
+							Export
+						</Button>
+					</Grid>
+				</Grid>
+
+				<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
+					<Grid item xs={8}>
+						<Typography variant="body1">
+							<Box fontWeight="fontWeightBold" marginBottom={1}>
+								{data[3].title}
+							</Box>
+							<Box fontSize={14}>
+								{data[3].desc.split('\n').map((text) => (
+									<>
+										{text}
+										<br />
+									</>
+								))}
+							</Box>
+						</Typography>
+						<FormControl fullWidth margin="dense">
+							<InputLabel>Invigilators</InputLabel>
+							<Select value={invigilator} onChange={handleChangeInvigilator}>
+								{invigilators.map((inv) => (
+									<MenuItem value={inv.id} key={inv.id}>
+										{inv.name}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={3} className="mt-auto">
+						<Button
+							className="savedScheduleButton"
+							variant="contained"
+							color="primary"
+							onClick={() => dispatch(output4(invigilator))}
+						>
+							Export
+						</Button>
+					</Grid>
+				</Grid>
 			</Grid>
 		</div>
 	);
