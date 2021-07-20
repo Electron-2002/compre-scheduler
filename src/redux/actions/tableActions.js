@@ -11,8 +11,10 @@ import {
 	UNALLOT_INVIGILATOR,
 	UPDATE_INVIGILATOR,
 } from '../reducers/tableReducer';
+import { setLoading } from './loadActions';
 
 export const fetchData = (scheduleId) => async (dispatch) => {
+	dispatch(setLoading(true));
 	try {
 		const result = await backend.post(`/schedule/${scheduleId}`);
 		const { schedule, exams } = result.data;
@@ -90,6 +92,7 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 				courseList,
 			},
 		});
+		dispatch(setLoading(false));
 	} catch (e) {
 		console.log(e);
 	}

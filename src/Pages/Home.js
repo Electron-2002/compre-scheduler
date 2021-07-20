@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../redux/actions/tableActions';
 import Grid from '@material-ui/core/Grid';
 import Navigation from '../Components/Home/Navigation';
 import Table from '../Components/Home/Table';
 import Sidebar from '../Components/Home/Sidebar';
+import Loading from '../Components/Loading/Loading';
 
 const Home = (props) => {
 	const scheduleId = props.match?.params?.scheduleId;
@@ -14,17 +15,25 @@ const Home = (props) => {
 		dispatch(fetchData(scheduleId));
 	}, [dispatch]);
 
+	const isLoading = useSelector((state) => state.load.isLoading);
+
 	return (
 		<div>
-			<Navigation showSave showExport />
-			<Grid container>
-				<Grid item xs={2} className="sidebar-container">
-					<Sidebar />
-				</Grid>
-				<Grid item xs={10}>
-					<Table />
-				</Grid>
-			</Grid>
+			{isLoading ? (
+				<Loading />
+			) : (
+				<>
+					<Navigation showSave showExport />
+					<Grid container>
+						<Grid item xs={2} className="sidebar-container">
+							<Sidebar />
+						</Grid>
+						<Grid item xs={10}>
+							<Table />
+						</Grid>
+					</Grid>
+				</>
+			)}
 		</div>
 	);
 };
