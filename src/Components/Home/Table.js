@@ -11,6 +11,7 @@ import BlockTarget from './BlockTarget';
 import BlockList from './BlockList';
 import { useSelector } from 'react-redux';
 import './Table.css';
+import { compareFn } from '../../utils/sort';
 
 const useStyles = makeStyles({
 	table: {
@@ -58,7 +59,7 @@ const MainTable = () => {
 							{rows?.map((row, j) => (
 								<TableCell className="styledTableCell min-width-200" key={j}>
 									<BlockTarget row={j} col={i} target="table" className="blockTarget">
-										{row.data[i]?.map((group, index) => {
+										{row.data[i]?.sort(compareFn).map((group, index) => {
 											return (
 												group.courses?.length > 0 && (
 													<BlockList courses={group.courses} key={index} row={j} col={i} />
