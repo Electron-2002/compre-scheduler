@@ -320,11 +320,11 @@ export const logout = () => (dispatch) => {
 };
 
 export const output1 = () => (_, getState) => {
-	window.open(`http://68.183.45.22:5005/output/one/${getState().table.id}`);
+	window.open(`https://compre-scheduling.herokuapp.com/output/one/${getState().table.id}`);
 };
 
 export const output2 = () => (_, getState) => {
-	window.open(`http://68.183.45.22:5005/output/two/${getState().table.id}`);
+	window.open(`https://compre-scheduling.herokuapp.com/output/two/${getState().table.id}`);
 };
 
 export const output3 = (course) => (_, getState) => {

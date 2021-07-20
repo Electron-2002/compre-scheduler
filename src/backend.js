@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const backend = axios.create({
-	baseURL: 'http://68.183.45.22:5005',
+	baseURL: 'https://compre-scheduling.herokuapp.com',
 });
 
 export default backend;
