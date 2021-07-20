@@ -38,3 +38,15 @@ export const compareFn = (a, b) => {
 	}
 	return 0;
 };
+
+export const invCompare = (a, b) => {
+	const a1 = a.name.toLowerCase();
+	const b1 = b.name.toLowerCase();
+	if (a1 < b1) {
+		return -1;
+	}
+	if (a1 > b1) {
+		return 1;
+	}
+	return 0;
+};

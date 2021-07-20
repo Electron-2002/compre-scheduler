@@ -330,10 +330,10 @@ export const output2 = () => (_, getState) => {
 	window.open(`https://compre-scheduling.herokuapp.com/output/two/${getState().table.id}`);
 };
 
-export const output3 = (course) => (_, getState) => {
-	console.log(course);
+export const output3 = (course) => () => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/three/${course}`);
 };
 
-export const output4 = (inv) => (_, getState) => {
-	console.log(inv);
+export const output4 = (inv) => () => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/four/${inv}`);
 };
