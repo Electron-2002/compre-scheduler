@@ -69,7 +69,7 @@ export default function MenuAppBar(props) {
 
 	const saveHandler = async () => {
 		dispatch(updateSchedule());
-		window.location.reload();
+		// window.location.reload();
 	};
 
 	return (

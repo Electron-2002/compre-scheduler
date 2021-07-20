@@ -17,7 +17,7 @@ const BlockList = ({ courses, row, col }) => {
 		}),
 	});
 
-	const [toggle, setToggle] = useState(true);
+	const [toggle, setToggle] = useState(false);
 
 	return (
 		<div className="sidebar-content" ref={drag} style={{ opacity: isDragging ? '0.5' : '1' }}>

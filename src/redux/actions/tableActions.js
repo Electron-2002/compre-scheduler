@@ -110,18 +110,18 @@ export const addBlock = (exam) => async (dispatch, getState) => {
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses.length > 0 && data.courses[0].course.block === finalCourse.course.block) {
+		if (data.slot === finalCourse.course.block) {
 			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, finalCourse];
-			newBlocks[i] = { courses: modCourses };
+			newBlocks[i] = { slot: data.slot, courses: modCourses };
 
 			flag = true;
 		}
 	});
 
 	if (!flag) {
-		newBlocks = [...blocks, { courses: [finalCourse] }];
+		newBlocks = [...blocks, { slot: finalCourse.course.block, courses: [finalCourse] }];
 	}
 
 	dispatch({ type: ADD_BLOCK, payload: newBlocks });
@@ -140,7 +140,7 @@ export const deleteBlock = (id) => async (dispatch, getState) => {
 				});
 
 				if (modCourses.length > 0) {
-					newBlocks[i] = { slot: modCourses[0].course.block, courses: modCourses };
+					newBlocks[i] = { slot: data.slot, courses: modCourses };
 				} else {
 					newBlocks = blocks.filter((_, index) => {
 						return index !== i;
@@ -167,18 +167,19 @@ export const addToTarget = (exam, row, col) => async (dispatch, getState) => {
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses?.length > 0 && data.courses[0].course.block === finalCourse.course.block) {
+		if (data.slot === finalCourse.course.block) {
 			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, finalCourse];
-			newBlocks[i] = { courses: modCourses };
+			newBlocks[i] = { slot: data.slot, courses: modCourses };
 
 			flag = true;
 		}
 	});
 
 	if (!flag) {
-		newBlocks = [...blocks, { courses: [finalCourse] }];
+		console.log({ slot: finalCourse.course.block, courses: [finalCourse] });
+		newBlocks = [...blocks, { slot: finalCourse.course.block, courses: [finalCourse] }];
 	}
 
 	let newRows = [...rows];
@@ -204,7 +205,7 @@ export const deleteFromTarget = (id, row, col) => async (dispatch, getState) => 
 						return index !== j;
 					});
 					if (modCourses.length > 0) {
-						newBlocks = [...modBlocks, { courses: modCourses }];
+						newBlocks = [...modBlocks, { slot: data.slot, courses: modCourses }];
 					} else {
 						newBlocks = [...modBlocks];
 					}
@@ -307,9 +308,9 @@ export const updateSchedule = () => async (dispatch, getState) => {
 	});
 
 	try {
-		await backend.put(`/schedule/${getState().table.id}`, {
-			exams,
-		});
+		// const result = await backend.put(`/schedule/${getState().table.id}`, {
+		// 	exams,
+		// });
 	} catch (e) {
 		console.log(e);
 	}
