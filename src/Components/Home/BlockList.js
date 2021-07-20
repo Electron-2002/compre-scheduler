@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../../utils/items';
 import Block from './Block';
@@ -17,12 +17,20 @@ const BlockList = ({ courses, row, col }) => {
 		}),
 	});
 
+	const [toggle, setToggle] = useState(true);
+
 	return (
 		<div className="sidebar-content" ref={drag} style={{ opacity: isDragging ? '0.5' : '1' }}>
-			<div className="sidebar-slots">{courses[0].course.block}</div>
-			{courses.map((course, j) => {
-				return !course.state ? <Block data={course} row={row} col={col} key={j} /> : null;
-			})}
+			<div className="sidebar-slots">
+				<span>{courses[0].course.block}</span>
+				<span onClick={() => setToggle(!toggle)} style={{ cursor: 'pointer' }}>
+					{toggle ? '▲' : '▼'}
+				</span>
+			</div>
+			{toggle &&
+				courses.map((course, j) => {
+					return !course.state ? <Block data={course} row={row} col={col} key={j} /> : null;
+				})}
 		</div>
 	);
 };

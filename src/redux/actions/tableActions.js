@@ -310,7 +310,6 @@ export const updateSchedule = () => async (dispatch, getState) => {
 		await backend.put(`/schedule/${getState().table.id}`, {
 			exams,
 		});
-		window.location.reload();
 	} catch (e) {
 		console.log(e);
 	}

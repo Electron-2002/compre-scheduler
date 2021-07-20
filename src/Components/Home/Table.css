@@ -23,6 +23,8 @@
 	background-color: #7986cb !important;
 	color: white !important;
 	border-right: 1px solid white;
+	font-size: 15px !important;
+	font-weight: bold !important;
 }
 .styledTableCell {
 	font-size: 14px;

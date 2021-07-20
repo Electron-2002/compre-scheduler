@@ -63,11 +63,13 @@ export default function MenuAppBar(props) {
 	};
 
 	const exportHandler = () => {
+		dispatch(updateSchedule());
 		history.push('/exports');
 	};
 
-	const saveHandler = () => {
+	const saveHandler = async () => {
 		dispatch(updateSchedule());
+		window.location.reload();
 	};
 
 	return (

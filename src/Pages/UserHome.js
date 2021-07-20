@@ -8,6 +8,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import { Redirect } from 'react-router-dom';
 import './Home.css';
 import backend from '../backend';
+import Loading from '../Components/Loading/Loading';
 
 const UserHome = () => {
 	const userId = sessionStorage.getItem('userId');
