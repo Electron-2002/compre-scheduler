@@ -40,7 +40,7 @@ const UserHome = () => {
 	};
 	const createNew = async (e) => {
 		e.preventDefault();
-		let scheduleData = {
+		const scheduleData = {
 			name: scheduleName,
 			slots_each_day: 2,
 			start_date: startDate.toISOString(),
@@ -97,6 +97,7 @@ const UserHome = () => {
 										<KeyboardDatePicker
 											disableToolbar
 											// variant="inline"
+											disablePast
 											format="dd/MM/yyyy"
 											margin="normal"
 											id="date-picker-inline"
@@ -112,6 +113,7 @@ const UserHome = () => {
 									<Grid item xs={5}>
 										<KeyboardDatePicker
 											disableToolbar
+											minDate={startDate}
 											// variant="inline"
 											format="dd/MM/yyyy"
 											margin="normal"

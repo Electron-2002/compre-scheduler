@@ -11,6 +11,7 @@ import Navigation from '../Components/Home/Navigation';
 import './Home.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { output1, output2, output3, output4 } from '../redux/actions/tableActions';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 const data = [
 	{
@@ -34,8 +35,9 @@ const data = [
 const Exports = () => {
 	const dispatch = useDispatch();
 
-	const courseList = useSelector((state) => state.table.courseList);
-	const invigilators = useSelector((state) => state.table.invigilators);
+	const table = useSelector((state) => state.table);
+	const courseList = table.courseList;
+	const invigilators = table.invigilators;
 
 	const [course, setCourse] = useState('');
 	const [invigilator, setInvigilator] = useState('');
@@ -47,6 +49,10 @@ const Exports = () => {
 	const handleChangeInvigilator = (e) => {
 		setInvigilator(e.target.value);
 	};
+
+	if (!table.id) {
+		return <Redirect to="/" />;
+	}
 
 	return (
 		<div>
