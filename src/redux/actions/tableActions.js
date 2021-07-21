@@ -290,6 +290,7 @@ export const updateInvigilator = (row, col, data, index, invigilator) => async (
 };
 
 export const updateSchedule = () => async (dispatch, getState) => {
+	dispatch(setLoading(true));
 	const blocks = getState().table.blocks;
 	const rows = getState().table.rows;
 
@@ -307,13 +308,17 @@ export const updateSchedule = () => async (dispatch, getState) => {
 		exams = [...exams, ...block.courses];
 	});
 
+	console.log(exams);
+
 	try {
 		const result = await backend.put(`/schedule/${getState().table.id}`, {
 			exams,
 		});
+		console.log(result);
 	} catch (e) {
 		console.log(e);
 	}
+	dispatch(setLoading(false));
 };
 
 export const logout = () => (dispatch) => {
