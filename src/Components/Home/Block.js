@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { allotInvigilator, unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-const InvigilatorSelect = ({ data, index, row, col }) => {
+const InvigilatorSelect = ({ data }) => {
 	const [isSaved, setSave] = useState(false);
 	const [invigilatorData, setInvigilatorData] = useState({});
 
@@ -25,11 +25,39 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 
 	return (
 		<div>
+			{data.exam_room?.map((i, k) => {
+				i.invigilatorsAlloteds.map((j) => (
+					<>
+						<select className="invigilatorSelect">
+							<option value={j.id}>{j.name}</option>
+						</select>
+						<select className="invigilatorSelect">
+							<option value={i.id}>{i.name}</option>
+						</select>
+						<Tooltip title="Tooltip" arrow placement="top-start" style={{ width: '5%' }}>
+							<IconButton aria-label="info" size="small">
+								<InfoIcon fontSize="inherit" />
+							</IconButton>
+						</Tooltip>
+						<IconButton
+							style={{ width: '5%' }}
+							aria-label="delete"
+							onClick={() => {
+								dispatch(unAllotInvigilator(data, i.id, j.id));
+							}}
+							size="small"
+						>
+							<DeleteIcon fontSize="inherit" />
+						</IconButton>
+					</>
+				));
+			})}
 			<select
 				className="invigilatorSelect"
 				onChange={(e) => {
 					setSave(false);
-					setInvigilatorData({ ...invigilatorData, invigilator: e.target.value });
+					let invi = invigilators.find((i) => i.id === e.target.value);
+					setInvigilatorData({ ...invigilatorData, invigilator: invi });
 				}}
 			>
 				{/* {data.recommendedInvigilators.map((el) => {
@@ -37,14 +65,15 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 				})} */}
 				<option value="null">-----------</option>
 				{invigilators.map((el) => (
-					<option value={el}>{el}</option>
+					<option value={el.id}>{el.name}</option>
 				))}
 			</select>
 			<select
 				className="invigilatorSelect"
 				onChange={(e) => {
 					setSave(false);
-					setInvigilatorData({ ...invigilatorData, classroom: e.target.value });
+					let room = classrooms.find((i) => i.id === e.target.value);
+					setInvigilatorData({ ...invigilatorData, classroom: room });
 				}}
 			>
 				{/* {data.recommendedInvigilators.map((el) => {
@@ -52,7 +81,7 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 				})} */}
 				<option value="null">-----------</option>
 				{classrooms.map((el) => (
-					<option value={el}>{el}</option>
+					<option value={el.id}>{el.name}</option>
 				))}
 			</select>
 			<Tooltip title="Tooltip" arrow placement="top-start" style={{ width: '5%' }}>
@@ -65,11 +94,12 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 				aria-label="delete"
 				onClick={() => {
 					if (isSaved) {
-						dispatch(unAllotInvigilator(row, col, data, index));
+						console.log({ invigilatorData });
+						dispatch(unAllotInvigilator(data, invigilatorData));
 						setSave(false);
 					} else {
 						if (!invigilatorData.invigilator) return;
-						dispatch(updateInvigilator(row, col, data, index, ''));
+						dispatch(updateInvigilator(data, invigilatorData));
 						setSave(true);
 					}
 				}}
@@ -82,6 +112,7 @@ const InvigilatorSelect = ({ data, index, row, col }) => {
 };
 
 const Block = ({ data, row, col }) => {
+	// console.log({ data, row, col });
 	const dispatch = useDispatch();
 
 	const [{ isDragging }, drag] = useDrag({
@@ -118,9 +149,7 @@ const Block = ({ data, row, col }) => {
 
 			{invigilatorOpen ? (
 				<div className="invigilatorOpen">
-					{data.allotedInvigilators.map((el, index) => {
-						return <InvigilatorSelect data={data} key={index} index={index} row={row} col={col} />;
-					})}
+					<InvigilatorSelect row={row} col={col} data={data} />
 					{row === -1 ? null : (
 						<Button
 							variant="outlined"

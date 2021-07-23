@@ -237,52 +237,66 @@ export const allotInvigilator = (row, col, data, invigilator) => async (dispatch
 	dispatch({ type: ALLOT_INVIGILATOR, payload: newRows });
 };
 
-export const unAllotInvigilator = (row, col, data, index) => async (dispatch, getState) => {
-	const rows = getState().table.rows;
+export const unAllotInvigilator = (data, invigilatorData) => async (dispatch, getState) => {
+	let room = data.exam_rooms.findIndex((o) => o.id === invigilatorData.classroom.id);
+	// const rows = getState().table.rows;
 
-	const blocks = rows[row].data[col];
-	const newBlocks = blocks;
+	// const blocks = rows[row].data[col];
+	// const newBlocks = blocks;
 
-	newBlocks.forEach((block) => {
-		if (block.courses && block.courses[0]?.slot === data.courses[0].block) {
-			block.courses.forEach(({ course }) => {
-				if (data.id === course.id) {
-					let newAllotedArray = course.allotedInvigilators;
-					newAllotedArray.splice(index, 1);
-					course.allotedInvigilators = newAllotedArray;
-				}
-			});
-		}
-	});
+	// newBlocks.forEach((block) => {
+	// 	if (block.courses && block.courses[0]?.slot === data.courses[0].block) {
+	// 		block.courses.forEach(({ course }) => {
+	// 			if (data.id === course.id) {
+	// 				let newAllotedArray = course.allotedInvigilators;
+	// 				newAllotedArray.splice(index, 1);
+	// 				course.allotedInvigilators = newAllotedArray;
+	// 			}
+	// 		});
+	// 	}
+	// });
 
-	let newRows = [...rows];
-	newRows[row].data[col] = newBlocks;
+	// let newRows = [...rows];
+	// newRows[row].data[col] = newBlocks;
 
-	dispatch({ type: UNALLOT_INVIGILATOR, payload: newRows });
+	// dispatch({ type: UNALLOT_INVIGILATOR, payload: newRows });
 };
 
-export const updateInvigilator = (row, col, data, index, invigilator) => async (dispatch, getState) => {
-	const rows = getState().table.rows;
-
-	const blocks = rows[row].data[col];
-	const newBlocks = blocks;
-
-	newBlocks.forEach((block) => {
-		if (block.courses && block.courses[0]?.slot === data.courses[0].block) {
-			block.courses.forEach(({ course }) => {
-				if (data.id === course.id) {
-					let newAllotedArray = course.allotedInvigilators;
-					newAllotedArray[index] = invigilator;
-					course.allotedInvigilators = newAllotedArray;
-				}
-			});
-		}
-	});
-
-	let newRows = [...rows];
-	newRows[row].data[col] = newBlocks;
-
-	dispatch({ type: UPDATE_INVIGILATOR, payload: newRows });
+export const updateInvigilator = (data, invigilatorData) => async (dispatch, getState) => {
+	let room = data.exam_rooms.findIndex((o) => o.id === invigilatorData.classroom.id);
+	console.log(room);
+	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
+	invigilatorData.classroom.exam_id = data.id;
+	if (room !== -1) {
+		data.exam_rooms[room].invigilatorsAlloteds.push({
+			invigilators_id: invigilatorData.invigilator.id,
+			exam_room_id: invigilatorData.classroom.id,
+		});
+	} else {
+		invigilatorData.classroom.invigilatorsAlloteds = {
+			invigilators_id: invigilatorData.invigilator.id,
+			exam_room_id: invigilatorData.classroom.id,
+		};
+		data.exam_rooms.push(invigilatorData.classroom);
+	}
+	console.log(data);
+	// const rows = getState().table.rows;
+	// const blocks = rows[row].data[col];
+	// const newBlocks = blocks;
+	// newBlocks.forEach((block) => {
+	// 	if (block.courses && block.courses[0]?.slot === data.courses[0].block) {
+	// 		block.courses.forEach(({ course }) => {
+	// 			if (data.id === course.id) {
+	// 				let newAllotedArray = course.allotedInvigilators;
+	// 				newAllotedArray[index] = invigilator;
+	// 				course.allotedInvigilators = newAllotedArray;
+	// 			}
+	// 		});
+	// 	}
+	// });
+	// let newRows = [...rows];
+	// newRows[row].data[col] = newBlocks;
+	// dispatch({ type: UPDATE_INVIGILATOR, payload: newRows });
 };
 
 export const updateSchedule = () => async (dispatch, getState) => {
@@ -307,7 +321,7 @@ export const updateSchedule = () => async (dispatch, getState) => {
 		await backend.put(`/schedule/${getState().table.id}`, {
 			exams,
 		});
-		window.location.reload();
+		// window.location.reload();
 	} catch (e) {
 		console.log(e);
 	}
