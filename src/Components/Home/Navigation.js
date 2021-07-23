@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -16,14 +16,32 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
 	},
-	menuButton: {
-		marginRight: theme.spacing(2),
-	},
 	title: {
 		flexGrow: 1,
 		textAlign: 'center',
 	},
 }));
+
+const StyledMenu = withStyles({
+	paper: {
+		border: '2px solid #7886CB',
+	},
+})((props) => (
+	<Menu
+		getContentAnchorEl={null}
+		anchorOrigin={{
+			vertical: 'bottom',
+			horizontal: 'center',
+		}}
+		transformOrigin={{
+			vertical: 'top',
+			horizontal: 'center',
+		}}
+		elevation={0}
+		keepMounted
+		{...props}
+	/>
+));
 
 export default function MenuAppBar(props) {
 	const { showSave, showExport } = props;
@@ -45,6 +63,7 @@ export default function MenuAppBar(props) {
 	};
 
 	const exportHandler = () => {
+		dispatch(updateSchedule());
 		history.push('/exports');
 	};
 
@@ -79,22 +98,8 @@ export default function MenuAppBar(props) {
 						>
 							<AccountCircle />
 						</IconButton>
-						<Menu
-							id="menu-appbar"
-							anchorEl={anchorEl}
-							anchorOrigin={{
-								vertical: 'top',
-								horizontal: 'right',
-							}}
-							keepMounted
-							transformOrigin={{
-								vertical: 'top',
-								horizontal: 'right',
-							}}
-							open={open}
-							onClose={handleClose}
-						>
-							<MenuItem onClick={handleClose}>Profile</MenuItem>
+						<StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
+							<MenuItem onClick={() => history.push('/')}>Home</MenuItem>
 							<MenuItem
 								onClick={() => {
 									dispatch(logout());
@@ -102,7 +107,7 @@ export default function MenuAppBar(props) {
 							>
 								Log out
 							</MenuItem>
-						</Menu>
+						</StyledMenu>
 					</div>
 				</Toolbar>
 			</AppBar>

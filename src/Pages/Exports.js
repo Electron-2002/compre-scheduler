@@ -11,6 +11,8 @@ import Navigation from '../Components/Home/Navigation';
 import './Home.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { output1, output2, output3, output4 } from '../redux/actions/tableActions';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import { invCompare } from '../utils/sort';
 
 const data = [
 	{
@@ -34,8 +36,9 @@ const data = [
 const Exports = () => {
 	const dispatch = useDispatch();
 
-	const courseList = useSelector((state) => state.table.courseList);
-	const invigilators = useSelector((state) => state.table.invigilators);
+	const table = useSelector((state) => state.table);
+	const courseList = table.courseList;
+	const invigilators = table.invigilators;
 
 	const [course, setCourse] = useState('');
 	const [invigilator, setInvigilator] = useState('');
@@ -47,6 +50,20 @@ const Exports = () => {
 	const handleChangeInvigilator = (e) => {
 		setInvigilator(e.target.value);
 	};
+
+	const output3Handler = () => {
+		if (course == '') return;
+		dispatch(output3(course));
+	};
+
+	const output4Handler = () => {
+		if (invigilator == '') return;
+		dispatch(output4(invigilator));
+	};
+
+	if (!table.id) {
+		return <Redirect to="/" />;
+	}
 
 	return (
 		<div>
@@ -139,7 +156,7 @@ const Exports = () => {
 							className="savedScheduleButton"
 							variant="contained"
 							color="primary"
-							onClick={() => dispatch(output3(course))}
+							onClick={output3Handler}
 						>
 							Export
 						</Button>
@@ -164,8 +181,8 @@ const Exports = () => {
 						<FormControl fullWidth margin="dense">
 							<InputLabel>Invigilators</InputLabel>
 							<Select value={invigilator} onChange={handleChangeInvigilator}>
-								{invigilators.map((inv) => (
-									<MenuItem value={inv.id} key={inv.id}>
+								{invigilators.sort(invCompare).map((inv) => (
+									<MenuItem value={inv.psrn_no} key={inv.id}>
 										{inv.name}
 									</MenuItem>
 								))}
@@ -177,7 +194,7 @@ const Exports = () => {
 							className="savedScheduleButton"
 							variant="contained"
 							color="primary"
-							onClick={() => dispatch(output4(invigilator))}
+							onClick={output4Handler}
 						>
 							Export
 						</Button>

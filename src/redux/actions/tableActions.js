@@ -11,8 +11,10 @@ import {
 	UNALLOT_INVIGILATOR,
 	UPDATE_INVIGILATOR,
 } from '../reducers/tableReducer';
+import { setLoading } from './loadActions';
 
 export const fetchData = (scheduleId) => async (dispatch) => {
+	dispatch(setLoading(true));
 	try {
 		const result = await backend.post(`/schedule/${scheduleId}`);
 		const { schedule, exams } = result.data;
@@ -90,6 +92,7 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 				courseList,
 			},
 		});
+		dispatch(setLoading(false));
 	} catch (e) {
 		console.log(e);
 	}
@@ -107,18 +110,18 @@ export const addBlock = (exam) => async (dispatch, getState) => {
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses.length > 0 && data.courses[0].course.block === finalCourse.course.block) {
+		if (data.slot === finalCourse.course.block) {
 			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, finalCourse];
-			newBlocks[i] = { courses: modCourses };
+			newBlocks[i] = { slot: data.slot, courses: modCourses };
 
 			flag = true;
 		}
 	});
 
 	if (!flag) {
-		newBlocks = [...blocks, { courses: [finalCourse] }];
+		newBlocks = [...blocks, { slot: finalCourse.course.block, courses: [finalCourse] }];
 	}
 
 	dispatch({ type: ADD_BLOCK, payload: newBlocks });
@@ -137,7 +140,7 @@ export const deleteBlock = (id) => async (dispatch, getState) => {
 				});
 
 				if (modCourses.length > 0) {
-					newBlocks[i] = { slot: modCourses[0].course.block, courses: modCourses };
+					newBlocks[i] = { slot: data.slot, courses: modCourses };
 				} else {
 					newBlocks = blocks.filter((_, index) => {
 						return index !== i;
@@ -164,18 +167,19 @@ export const addToTarget = (exam, row, col) => async (dispatch, getState) => {
 
 	let flag = false;
 	blocks.forEach((data, i) => {
-		if (data.courses?.length > 0 && data.courses[0].course.block === finalCourse.course.block) {
+		if (data.slot === finalCourse.course.block) {
 			newBlocks = [...blocks];
 
 			const modCourses = [...blocks[i].courses, finalCourse];
-			newBlocks[i] = { courses: modCourses };
+			newBlocks[i] = { slot: data.slot, courses: modCourses };
 
 			flag = true;
 		}
 	});
 
 	if (!flag) {
-		newBlocks = [...blocks, { courses: [finalCourse] }];
+		console.log({ slot: finalCourse.course.block, courses: [finalCourse] });
+		newBlocks = [...blocks, { slot: finalCourse.course.block, courses: [finalCourse] }];
 	}
 
 	let newRows = [...rows];
@@ -201,7 +205,7 @@ export const deleteFromTarget = (id, row, col) => async (dispatch, getState) => 
 						return index !== j;
 					});
 					if (modCourses.length > 0) {
-						newBlocks = [...modBlocks, { courses: modCourses }];
+						newBlocks = [...modBlocks, { slot: data.slot, courses: modCourses }];
 					} else {
 						newBlocks = [...modBlocks];
 					}
@@ -300,6 +304,7 @@ export const updateInvigilator = (data, invigilatorData) => async (dispatch, get
 };
 
 export const updateSchedule = () => async (dispatch, getState) => {
+	dispatch(setLoading(true));
 	const blocks = getState().table.blocks;
 	const rows = getState().table.rows;
 
@@ -317,14 +322,18 @@ export const updateSchedule = () => async (dispatch, getState) => {
 		exams = [...exams, ...block.courses];
 	});
 
+	console.log(exams);
+
 	try {
-		await backend.put(`/schedule/${getState().table.id}`, {
+		const result = await backend.put(`/schedule/${getState().table.id}`, {
 			exams,
 		});
-		// window.location.reload();
+		window.location.reload();
+		console.log(result);
 	} catch (e) {
 		console.log(e);
 	}
+	dispatch(setLoading(false));
 };
 
 export const logout = () => (dispatch) => {
@@ -341,10 +350,10 @@ export const output2 = () => (_, getState) => {
 	window.open(`https://compre-scheduling.herokuapp.com/output/two/${getState().table.id}`);
 };
 
-export const output3 = (course) => (_, getState) => {
-	console.log(course);
+export const output3 = (course) => () => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/three/${course}`);
 };
 
-export const output4 = (inv) => (_, getState) => {
-	console.log(inv);
+export const output4 = (inv) => () => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/four/${inv}`);
 };

@@ -11,6 +11,7 @@ import BlockTarget from './BlockTarget';
 import BlockList from './BlockList';
 import { useSelector } from 'react-redux';
 import './Table.css';
+import { compareFn } from '../../utils/sort';
 
 const useStyles = makeStyles({
 	table: {
@@ -32,7 +33,7 @@ const MainTable = () => {
 			<Table stickyHeader className={classes.table} aria-label="customized table">
 				<TableHead>
 					<TableRow>
-						<TableCell className="styledTableCellHead" width="40px">
+						<TableCell className="styledTableCellHead" width="40px" align="center">
 							Dates
 						</TableCell>
 						{rows?.map((row, i) => (
@@ -42,8 +43,9 @@ const MainTable = () => {
 								component="th"
 								scope="row"
 								className="bg-blue p-20px cell-border-left styledTableCellHead"
+								align="center"
 							>
-								{row.name}
+								{row.name[5] == '1' ? '9-12' : '2-5'}
 							</TableCell>
 						))}
 					</TableRow>
@@ -57,8 +59,7 @@ const MainTable = () => {
 							{rows?.map((row, j) => (
 								<TableCell className="styledTableCell min-width-200" key={j}>
 									<BlockTarget row={j} col={i} target="table" className="blockTarget">
-										{row.data[i]?.map((group, index) => {
-											console.log(group);
+										{row.data[i]?.sort(compareFn).map((group, index) => {
 											return (
 												group.courses?.length > 0 && (
 													<BlockList courses={group.courses} key={index} row={j} col={i} />

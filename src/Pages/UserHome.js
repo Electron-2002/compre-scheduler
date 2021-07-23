@@ -8,6 +8,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import { Redirect } from 'react-router-dom';
 import './Home.css';
 import backend from '../backend';
+import Loading from '../Components/Loading/Loading';
 
 const UserHome = () => {
 	const userId = sessionStorage.getItem('userId');
@@ -40,7 +41,7 @@ const UserHome = () => {
 	};
 	const createNew = async (e) => {
 		e.preventDefault();
-		let scheduleData = {
+		const scheduleData = {
 			name: scheduleName,
 			slots_each_day: 2,
 			start_date: startDate.toISOString(),
@@ -62,9 +63,9 @@ const UserHome = () => {
 			)}
 			<Navigation />
 			<Grid container justify="space-around" className="main-container">
-				<Grid item xs={5}>
+				{/* <Grid item xs={5}>
 					<p>Will put some illustration here</p>
-				</Grid>
+				</Grid> */}
 				<Grid item xs={5}>
 					<Grid item xs={12} container className="savedSchedule">
 						{userSchedules.map((i, k) => (
@@ -96,7 +97,8 @@ const UserHome = () => {
 									<Grid item xs={5}>
 										<KeyboardDatePicker
 											disableToolbar
-											variant="inline"
+											// variant="inline"
+											disablePast
 											format="dd/MM/yyyy"
 											margin="normal"
 											id="date-picker-inline"
@@ -112,7 +114,8 @@ const UserHome = () => {
 									<Grid item xs={5}>
 										<KeyboardDatePicker
 											disableToolbar
-											variant="inline"
+											minDate={startDate}
+											// variant="inline"
 											format="dd/MM/yyyy"
 											margin="normal"
 											id="date-picker-inline"
@@ -127,9 +130,11 @@ const UserHome = () => {
 									</Grid>
 									<Grid item xs={5}>
 										<TextField
+											disabled
 											required
 											style={{ marginTop: 16, width: '100%' }}
 											type="number"
+											value={2}
 											InputProps={{ inputProps: { min: 1, max: 10 } }}
 											label="No of Slots"
 										/>
