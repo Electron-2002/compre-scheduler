@@ -22,36 +22,42 @@ const InvigilatorSelect = ({ data }) => {
 
 	const invigilators = useSelector((state) => state.table.invigilators);
 	const classrooms = useSelector((state) => state.table.rooms);
-
+	let allotedArr = [];
+	{
+		data.exam_rooms.map((i, k) => {
+			i.invigilatorsAlloteds.map((j) => {
+				allotedArr.push({
+					invigilator: j.invigilator?.name || j.name,
+					room: i.room?.name || i.name,
+					invigilators_id: j.invigilators_id,
+					room_id: i.room_id,
+				});
+			});
+		});
+	}
 	return (
 		<div>
-			{data.exam_room?.map((i, k) => {
-				i.invigilatorsAlloteds.map((j) => (
-					<>
-						<select className="invigilatorSelect">
-							<option value={j.id}>{j.name}</option>
-						</select>
-						<select className="invigilatorSelect">
-							<option value={i.id}>{i.name}</option>
-						</select>
-						<Tooltip title="Tooltip" arrow placement="top-start" style={{ width: '5%' }}>
-							<IconButton aria-label="info" size="small">
-								<InfoIcon fontSize="inherit" />
-							</IconButton>
-						</Tooltip>
-						<IconButton
-							style={{ width: '5%' }}
-							aria-label="delete"
-							onClick={() => {
-								dispatch(unAllotInvigilator(data, i.id, j.id));
-							}}
-							size="small"
-						>
-							<DeleteIcon fontSize="inherit" />
+			{allotedArr.map((i) => (
+				<div className="d-flex">
+					<span className="alloted">{i.invigilator}</span> &nbsp; <span className="alloted">{i.room}</span>{' '}
+					&nbsp;{' '}
+					<span>
+						<IconButton style={{ width: '5%', marginLeft: '2.5px' }} size="small">
+							<DeleteIcon
+								fontSize="inherit"
+								onClick={() =>
+									dispatch(
+										unAllotInvigilator(data, {
+											invigilators_id: i.invigilators_id,
+											room_id: i.room_id,
+										})
+									)
+								}
+							/>
 						</IconButton>
-					</>
-				));
-			})}
+					</span>
+				</div>
+			))}
 			<select
 				className="invigilatorSelect"
 				onChange={(e) => {
@@ -93,19 +99,13 @@ const InvigilatorSelect = ({ data }) => {
 				style={{ width: '5%' }}
 				aria-label="delete"
 				onClick={() => {
-					if (isSaved) {
-						console.log({ invigilatorData });
-						dispatch(unAllotInvigilator(data, invigilatorData));
-						setSave(false);
-					} else {
-						if (!invigilatorData.invigilator) return;
-						dispatch(updateInvigilator(data, invigilatorData));
-						setSave(true);
-					}
+					if (!invigilatorData.invigilator) return;
+					dispatch(updateInvigilator(data, invigilatorData));
+					setSave(true);
 				}}
 				size="small"
 			>
-				{isSaved ? <DeleteIcon fontSize="inherit" /> : <CheckIcon fontSize="inherit" />}
+				<CheckIcon fontSize="inherit" />
 			</IconButton>
 		</div>
 	);

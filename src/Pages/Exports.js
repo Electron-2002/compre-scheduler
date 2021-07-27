@@ -52,12 +52,12 @@ const Exports = () => {
 	};
 
 	const output3Handler = () => {
-		if (course == '') return;
+		if (course === '') return;
 		dispatch(output3(course));
 	};
 
 	const output4Handler = () => {
-		if (invigilator == '') return;
+		if (invigilator === '') return;
 		dispatch(output4(invigilator));
 	};
 
