@@ -263,14 +263,11 @@ export const updateInvigilator = (data, invigilatorData) => async (dispatch, get
 	invigilatorData.classroom.exam_id = data.id;
 	if (room !== -1) {
 		let invigilatorArr = data.exam_rooms[room].invigilatorsAlloteds;
-		invigilatorArr.push([
-			...invigilatorArr,
-			{
-				name: invigilatorData.invigilator.name,
-				invigilators_id: invigilatorData.invigilator.id,
-				exam_room_id: invigilatorData.classroom.id,
-			},
-		]);
+		invigilatorArr.push({
+			name: invigilatorData.invigilator.name,
+			invigilators_id: invigilatorData.invigilator.id,
+			exam_room_id: invigilatorData.classroom.id,
+		});
 	} else {
 		invigilatorData.classroom.invigilatorsAlloteds = [
 			{
