@@ -252,7 +252,7 @@ export const unAllotInvigilator = (data, invigilatorData) => async (dispatch, ge
 	console.log(invigilator_idx);
 	data.exam_rooms[room_idx].invigilatorsAlloteds.splice(invigilator_idx, 1);
 	if (data.exam_rooms[room_idx].invigilatorsAlloteds.length === 0) data.exam_rooms.splice(room_idx, 1);
-
+	console.log(data);
 	// dispatch({ type: UNALLOT_INVIGILATOR, payload: data });
 };
 
