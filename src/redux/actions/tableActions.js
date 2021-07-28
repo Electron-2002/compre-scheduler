@@ -241,19 +241,36 @@ export const allotInvigilator = (row, col, data, invigilator) => async (dispatch
 	dispatch({ type: ALLOT_INVIGILATOR, payload: newRows });
 };
 
-export const unAllotInvigilator = (data, invigilatorData) => async (dispatch, getState) => {
+export const unAllotInvigilator = (data, row, col, invigilatorData) => async (dispatch, getState) => {
 	console.log(invigilatorData);
+	const rows = getState().table.rows;
+	let blocks = rows[row].data[col];
+	let currCourse = {};
+	let blockIdx, courseIdx;
+	blocks.forEach(({ courses }, i) => {
+		blockIdx = i;
+		courses.forEach((course, j) => {
+			courseIdx = j;
+			if (course.id === data.id) {
+				currCourse = course;
+			}
+		});
+	});
+
+	console.log(currCourse);
+
 	let room_id = invigilatorData.room_id;
 	let invigilator_id = invigilatorData.invigilators_id;
-	let room_idx = data.exam_rooms.findIndex((o) => o.id === room_id);
-	let invigilator_idx = data.exam_rooms[room_idx].invigilatorsAlloteds.findIndex(
+	let room_idx = currCourse.exam_rooms.findIndex((o) => o.id === room_id);
+	let invigilator_idx = currCourse.exam_rooms[room_idx].invigilatorsAlloteds.findIndex(
 		(o) => o.invigilators_id === invigilator_id
 	);
 	console.log(invigilator_idx);
-	data.exam_rooms[room_idx].invigilatorsAlloteds.splice(invigilator_idx, 1);
-	if (data.exam_rooms[room_idx].invigilatorsAlloteds.length === 0) data.exam_rooms.splice(room_idx, 1);
-	console.log(data);
-	// dispatch({ type: UNALLOT_INVIGILATOR, payload: data });
+	currCourse.exam_rooms[room_idx].invigilatorsAlloteds.splice(invigilator_idx, 1);
+	if (currCourse.exam_rooms[room_idx].invigilatorsAlloteds.length === 0) currCourse.exam_rooms.splice(room_idx, 1);
+	// let newRows = [...rows];
+	// newRows[row].data[col][blockIdx].courses[courseIdx] = currCourse;
+	dispatch({ type: UNALLOT_INVIGILATOR, payload: rows });
 };
 
 export const updateInvigilator = (data, invigilatorData) => async (dispatch, getState) => {

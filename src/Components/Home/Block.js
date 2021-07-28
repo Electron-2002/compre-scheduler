@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { allotInvigilator, unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-const InvigilatorSelect = ({ data }) => {
+const InvigilatorSelect = ({ data, row, col }) => {
 	const [isSaved, setSave] = useState(false);
 	const [invigilatorData, setInvigilatorData] = useState({});
 
@@ -47,7 +47,7 @@ const InvigilatorSelect = ({ data }) => {
 								fontSize="inherit"
 								onClick={() =>
 									dispatch(
-										unAllotInvigilator(data, {
+										unAllotInvigilator(data, row, col, {
 											invigilators_id: i.invigilators_id,
 											room_id: i.room_id,
 										})
