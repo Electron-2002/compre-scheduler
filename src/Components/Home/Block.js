@@ -100,7 +100,7 @@ const InvigilatorSelect = ({ data, row, col }) => {
 				aria-label="delete"
 				onClick={() => {
 					if (!invigilatorData.invigilator) return;
-					dispatch(updateInvigilator(data, invigilatorData));
+					dispatch(updateInvigilator(data,row, col, invigilatorData));
 					setSave(true);
 				}}
 				size="small"
@@ -129,7 +129,13 @@ const Block = ({ data, row, col }) => {
 
 	const [invigilatorOpen, setInvigilatorOpen] = useState(false);
 	const [instructorOpen, setInstructorOpen] = useState(false);
-
+	let totalInvigilatorsAlloted = 0;
+	let allotedCapacity   = 0;
+	data.exam_rooms.forEach(i => {
+		totalInvigilatorsAlloted += i.invigilatorsAlloteds?.length;
+		allotedCapacity+=i.capacity;
+	});
+	
 	return (
 		<Box ref={drag} boxShadow={3} margin="10px" className="courseBox" style={{ opacity: isDragging ? '0.5' : '1' }}>
 			<div className="subject">{data.course.bits_id}</div>
@@ -144,13 +150,13 @@ const Block = ({ data, row, col }) => {
 				</div>
 			) : null}
 			<div className="invigilator" onClick={() => setInvigilatorOpen(!invigilatorOpen)}>
-				Invigilators ({data.allotedInvigilators?.length}) : Classrooms {invigilatorOpen ? '▲' : '▼'}
+				Invigilators ({totalInvigilatorsAlloted}) : Classrooms ({data.exam_rooms?.length}) {invigilatorOpen ? '▲' : '▼'}
 			</div>
 
 			{invigilatorOpen ? (
 				<div className="invigilatorOpen">
 					<InvigilatorSelect row={row} col={col} data={data} />
-					{row === -1 ? null : (
+					{/* {row === -1 ? null : (
 						<Button
 							variant="outlined"
 							size="small"
@@ -170,7 +176,7 @@ const Block = ({ data, row, col }) => {
 						>
 							Add New
 						</Button>
-					)}
+					)} */}
 				</div>
 			) : null}
 
@@ -183,8 +189,8 @@ const Block = ({ data, row, col }) => {
 					<Grid item>
 						<PeopleIcon fontSize="small"></PeopleIcon>
 					</Grid>
-					<Grid item> Total : {' ' + data.capacity}</Grid>
-					<Grid item> Allotted : {' ' + data.capacity}</Grid>
+					<Grid item> Total : {' ' + data.course.capacity}</Grid>
+					<Grid item> Allotted : {' ' + allotedCapacity}</Grid>
 				</Grid>
 			</div>
 		</Box>

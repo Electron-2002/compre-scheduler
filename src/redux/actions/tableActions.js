@@ -242,7 +242,6 @@ export const allotInvigilator = (row, col, data, invigilator) => async (dispatch
 };
 
 export const unAllotInvigilator = (data, row, col, invigilatorData) => async (dispatch, getState) => {
-	console.log(invigilatorData);
 	const rows = getState().table.rows;
 	let blocks = rows[row].data[col];
 	let currCourse = {};
@@ -256,8 +255,6 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 			}
 		});
 	});
-
-	console.log(currCourse);
 
 	let room_id = invigilatorData.room_id;
 	let invigilator_id = invigilatorData.invigilators_id;
@@ -273,13 +270,26 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 	dispatch({ type: UNALLOT_INVIGILATOR, payload: rows });
 };
 
-export const updateInvigilator = (data, invigilatorData) => async (dispatch, getState) => {
-	let room = data.exam_rooms.findIndex((o) => o.id === invigilatorData.classroom.id);
-	console.log(room);
+export const updateInvigilator = (data, row, col, invigilatorData) => async (dispatch, getState) => {
+	console.log(invigilatorData);
+	const rows = getState().table.rows;
+	let blocks = rows[row].data[col];
+	let currCourse = {};
+	let blockIdx, courseIdx;
+	blocks.forEach(({ courses }, i) => {
+		blockIdx = i;
+		courses.forEach((course, j) => {
+			courseIdx = j;
+			if (course.id === data.id) {
+				currCourse = course;
+			}
+		});
+	});
+	let room = currCourse.exam_rooms.findIndex((o) => o.id === invigilatorData.classroom.id);
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
-	invigilatorData.classroom.exam_id = data.id;
+	invigilatorData.classroom.exam_id = currCourse.id;
 	if (room !== -1) {
-		let invigilatorArr = data.exam_rooms[room].invigilatorsAlloteds;
+		let invigilatorArr = currCourse.exam_rooms[room].invigilatorsAlloteds;
 		invigilatorArr.push({
 			name: invigilatorData.invigilator.name,
 			invigilators_id: invigilatorData.invigilator.id,
@@ -293,10 +303,10 @@ export const updateInvigilator = (data, invigilatorData) => async (dispatch, get
 				exam_room_id: invigilatorData.classroom.id,
 			},
 		];
-		data.exam_rooms.push(invigilatorData.classroom);
+		currCourse.exam_rooms.push(invigilatorData.classroom);
 	}
 	console.log(data);
-	// dispatch({ type: UPDATE_INVIGILATOR, payload: data });
+	dispatch({ type: UPDATE_INVIGILATOR, payload: rows });
 };
 
 export const updateSchedule = () => async (dispatch, getState) => {
