@@ -288,19 +288,23 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 	let room = currCourse.exam_rooms.findIndex((o) => o.id === invigilatorData.classroom.id);
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
 	invigilatorData.classroom.exam_id = currCourse.id;
+	invigilatorData.classroom.schedule_id = currCourse.schedule_id;
 	if (room !== -1) {
 		let invigilatorArr = currCourse.exam_rooms[room].invigilatorsAlloteds;
 		invigilatorArr.push({
 			name: invigilatorData.invigilator.name,
 			invigilators_id: invigilatorData.invigilator.id,
-			exam_room_id: invigilatorData.classroom.id,
+			// exam_room_id: invigilatorData.classroom.id,
+			schedule_id: currCourse.schedule_id,
 		});
 	} else {
+		console.log(invigilatorData.classroom);
 		invigilatorData.classroom.invigilatorsAlloteds = [
 			{
 				name: invigilatorData.invigilator.name,
 				invigilators_id: invigilatorData.invigilator.id,
-				exam_room_id: invigilatorData.classroom.id,
+				// exam_room_id: invigilatorData.classroom.id,
+				schedule_id: currCourse.schedule_id,
 			},
 		];
 		currCourse.exam_rooms.push(invigilatorData.classroom);

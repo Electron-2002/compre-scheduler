@@ -31,6 +31,7 @@ const InvigilatorSelect = ({ data, row, col }) => {
 					room: i.room?.name || i.name,
 					invigilators_id: j.invigilators_id,
 					room_id: i.room_id,
+					dept: j.invigilator?.dept || j.dept,
 				});
 			});
 		});
@@ -39,8 +40,10 @@ const InvigilatorSelect = ({ data, row, col }) => {
 		<div>
 			{allotedArr.map((i) => (
 				<div className="d-flex">
-					<span className="alloted">{i.invigilator}</span> &nbsp; <span className="alloted">{i.room}</span>{' '}
-					&nbsp;{' '}
+					<span className="alloted">
+						{i.invigilator}[{i.dept}]
+					</span>{' '}
+					&nbsp; <span className="alloted">{i.room}</span> &nbsp;{' '}
 					<span>
 						<IconButton style={{ width: '5%', marginLeft: '2.5px' }} size="small">
 							<DeleteIcon
@@ -71,7 +74,9 @@ const InvigilatorSelect = ({ data, row, col }) => {
 				})} */}
 				<option value="null">-----------</option>
 				{invigilators.map((el) => (
-					<option value={el.id}>{el.name}</option>
+					<option value={el.id} key={el.id}>
+						{el.name} [{el.dept}]
+					</option>
 				))}
 			</select>
 			<select
@@ -87,7 +92,9 @@ const InvigilatorSelect = ({ data, row, col }) => {
 				})} */}
 				<option value="null">-----------</option>
 				{classrooms.map((el) => (
-					<option value={el.id}>{el.name}</option>
+					<option value={el.id} key={el.id}>
+						{el.name}
+					</option>
 				))}
 			</select>
 			<Tooltip title="Tooltip" arrow placement="top-start" style={{ width: '5%' }}>
@@ -100,7 +107,7 @@ const InvigilatorSelect = ({ data, row, col }) => {
 				aria-label="delete"
 				onClick={() => {
 					if (!invigilatorData.invigilator) return;
-					dispatch(updateInvigilator(data,row, col, invigilatorData));
+					dispatch(updateInvigilator(data, row, col, invigilatorData));
 					setSave(true);
 				}}
 				size="small"
@@ -130,15 +137,28 @@ const Block = ({ data, row, col }) => {
 	const [invigilatorOpen, setInvigilatorOpen] = useState(false);
 	const [instructorOpen, setInstructorOpen] = useState(false);
 	let totalInvigilatorsAlloted = 0;
-	let allotedCapacity   = 0;
-	data.exam_rooms.forEach(i => {
+	let allotedCapacity = 0;
+	data.exam_rooms.forEach((i) => {
 		totalInvigilatorsAlloted += i.invigilatorsAlloteds?.length;
-		allotedCapacity+=i.capacity;
+		allotedCapacity += i.capacity;
 	});
-	
+
 	return (
-		<Box ref={drag} boxShadow={3} margin="10px" className="courseBox" style={{ opacity: isDragging ? '0.5' : '1' }}>
-			<div className="subject">{data.course.bits_id}</div>
+		<Box
+			ref={drag}
+			boxShadow={3}
+			margin="10px"
+			className="courseBox"
+			style={{
+				opacity: isDragging ? '0.5' : '1',
+			}}
+		>
+			<div
+				className="subject"
+				style={{ backgroundColor: allotedCapacity === data.course.capacity ? '#49da49' : '#9fa8da' }}
+			>
+				{data.course.bits_id}
+			</div>
 			<div className="instructor" onClick={() => setInstructorOpen(!instructorOpen)}>
 				Instructors ({data.instructors?.length || 0}) {instructorOpen ? '▲' : '▼'}
 			</div>
@@ -150,7 +170,8 @@ const Block = ({ data, row, col }) => {
 				</div>
 			) : null}
 			<div className="invigilator" onClick={() => setInvigilatorOpen(!invigilatorOpen)}>
-				Invigilators ({totalInvigilatorsAlloted}) : Classrooms ({data.exam_rooms?.length}) {invigilatorOpen ? '▲' : '▼'}
+				Invigilators ({totalInvigilatorsAlloted}) : Classrooms ({data.exam_rooms?.length}){' '}
+				{invigilatorOpen ? '▲' : '▼'}
 			</div>
 
 			{invigilatorOpen ? (
