@@ -11,16 +11,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import { ItemTypes } from '../../utils/items';
 import { useDispatch, useSelector } from 'react-redux';
-import { allotInvigilator, unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
+import { unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-const InvigilatorSelect = ({ data, row, col }) => {
-	const [isSaved, setSave] = useState(false);
+const InvigilatorSelect = ({ data, row, col, invList }) => {
 	const [invigilatorData, setInvigilatorData] = useState({});
 
 	const dispatch = useDispatch();
 
-	const invigilators = useSelector((state) => state.table.invigilators);
 	const classrooms = useSelector((state) => state.table.rooms);
 	let allotedArr = [];
 	{
@@ -64,16 +62,12 @@ const InvigilatorSelect = ({ data, row, col }) => {
 			<select
 				className="invigilatorSelect"
 				onChange={(e) => {
-					setSave(false);
-					let invi = invigilators.find((i) => i.id === e.target.value);
+					let invi = invList.find((i) => i.id === e.target.value);
 					setInvigilatorData({ ...invigilatorData, invigilator: invi });
 				}}
 			>
-				{/* {data.recommendedInvigilators.map((el) => {
-					return <option value={el}>{el}</option>;
-				})} */}
 				<option value="null">-----------</option>
-				{invigilators.map((el) => (
+				{invList.map((el) => (
 					<option value={el.id} key={el.id}>
 						{el.name} [{el.dept}]
 					</option>
@@ -82,14 +76,10 @@ const InvigilatorSelect = ({ data, row, col }) => {
 			<select
 				className="invigilatorSelect"
 				onChange={(e) => {
-					setSave(false);
 					let room = classrooms.find((i) => i.id === e.target.value);
 					setInvigilatorData({ ...invigilatorData, classroom: room });
 				}}
 			>
-				{/* {data.recommendedInvigilators.map((el) => {
-					return <option value={el}>{el}</option>;
-				})} */}
 				<option value="null">-----------</option>
 				{classrooms.map((el) => (
 					<option value={el.id} key={el.id}>
@@ -108,7 +98,7 @@ const InvigilatorSelect = ({ data, row, col }) => {
 				onClick={() => {
 					if (!invigilatorData.invigilator) return;
 					dispatch(updateInvigilator(data, row, col, invigilatorData));
-					setSave(true);
+					setInvigilatorData(() => {});
 				}}
 				size="small"
 			>
@@ -118,8 +108,7 @@ const InvigilatorSelect = ({ data, row, col }) => {
 	);
 };
 
-const Block = ({ data, row, col }) => {
-	// console.log({ data, row, col });
+const Block = ({ data, row, col, invList }) => {
 	const dispatch = useDispatch();
 
 	const [{ isDragging }, drag] = useDrag({
@@ -176,34 +165,9 @@ const Block = ({ data, row, col }) => {
 
 			{invigilatorOpen ? (
 				<div className="invigilatorOpen">
-					<InvigilatorSelect row={row} col={col} data={data} />
-					{/* {row === -1 ? null : (
-						<Button
-							variant="outlined"
-							size="small"
-							style={{ background: 'transparent', margin: 10 }}
-							onClick={() => {
-								dispatch(
-									allotInvigilator(
-										row,
-										col,
-										data,
-										data.recommendedInvigilators.length > 0
-											? data.recommendedInvigilators[0]
-											: 'None'
-									)
-								);
-							}}
-						>
-							Add New
-						</Button>
-					)} */}
+					<InvigilatorSelect row={row} col={col} data={data} invList={invList} />
 				</div>
 			) : null}
-
-			{/* <div className="classroom" onClick={() => {}}>
-				Classrooms ▼
-			</div> */}
 
 			<div className="totalStrength">
 				<Grid container direction="row" spacing={2}>

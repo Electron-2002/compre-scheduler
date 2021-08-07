@@ -5,6 +5,7 @@ import { ItemTypes } from '../../utils/items';
 import { useDispatch } from 'react-redux';
 import { addBlock, addToTarget, deleteBlock, deleteFromTarget } from '../../redux/actions/tableActions';
 import './Block.css';
+
 const BlockTarget = ({ row, col, target, children }) => {
 	const dispatch = useDispatch();
 
