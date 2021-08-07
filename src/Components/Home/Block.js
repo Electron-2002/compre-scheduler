@@ -24,16 +24,18 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 	{
 		data.exam_rooms.map((i, k) => {
 			i.invigilatorsAlloteds.map((j) => {
+				console.log(j);
 				allotedArr.push({
 					invigilator: j.invigilator?.name || j.name,
 					room: i.room?.name || i.name,
-					invigilators_id: j.invigilators_id,
-					room_id: i.room_id,
+					invigilators_id: j.invigilator?.id,
+					room_id: i.room?.id,
 					dept: j.invigilator?.dept || j.dept,
 				});
 			});
 		});
 	}
+	console.log(allotedArr);
 	return (
 		<div>
 			{allotedArr.map((i) => (
