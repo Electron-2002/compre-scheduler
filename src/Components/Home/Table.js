@@ -27,6 +27,7 @@ const MainTable = () => {
 	const table = useSelector((state) => state.table);
 	const rows = table.rows;
 	const dates = table.dates;
+	const invigilators = table.invigilators;
 
 	return (
 		<TableContainer style={{ height: 'calc(100vh - 64px)' }} component={Paper}>
@@ -56,19 +57,48 @@ const MainTable = () => {
 							<TableCell className="styledTableCell" align="center">
 								{date.formatted}
 							</TableCell>
-							{rows?.map((row, j) => (
-								<TableCell className="styledTableCell min-width-200" key={j}>
-									<BlockTarget row={j} col={i} target="table" className="blockTarget">
-										{row.data[i]?.sort(compareFn).map((group, index) => {
-											return (
-												group.courses?.length > 0 && (
-													<BlockList courses={group.courses} key={index} row={j} col={i} />
-												)
-											);
-										})}
-									</BlockTarget>
-								</TableCell>
-							))}
+							{rows?.map((row, j) => {
+								const invId = invigilators.map((inv) => inv.id);
+
+								let allotedList = [];
+								for (const group of row.data[i]) {
+									group.courses.forEach((course) => {
+										course.exam_rooms.forEach((room) => {
+											room.invigilatorsAlloteds.forEach((inv) => {
+												allotedList = [...allotedList, inv.invigilator];
+											});
+										});
+									});
+								}
+
+								const allotedId = allotedList.map((alloted) => alloted.id);
+								const finalList = [];
+								invId.forEach((x, i) => {
+									if (!allotedId.includes(x)) {
+										finalList.push(invigilators[i]);
+									}
+								});
+
+								return (
+									<TableCell className="styledTableCell min-width-200" key={j}>
+										<BlockTarget row={j} col={i} target="table" className="blockTarget">
+											{row.data[i]?.sort(compareFn).map((group, index) => {
+												return (
+													group.courses?.length > 0 && (
+														<BlockList
+															courses={group.courses}
+															key={index}
+															row={j}
+															col={i}
+															invList={finalList}
+														/>
+													)
+												);
+											})}
+										</BlockTarget>
+									</TableCell>
+								);
+							})}
 						</TableRow>
 					))}
 				</TableBody>
