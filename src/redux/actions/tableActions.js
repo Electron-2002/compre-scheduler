@@ -294,6 +294,7 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 		invigilatorArr.push({
 			name: invigilatorData.invigilator.name,
 			invigilators_id: invigilatorData.invigilator.id,
+			invigilator: invigilatorData.invigilator,
 			// exam_room_id: invigilatorData.classroom.id,
 			schedule_id: currCourse.schedule_id,
 		});
@@ -303,7 +304,7 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 			{
 				name: invigilatorData.invigilator.name,
 				invigilators_id: invigilatorData.invigilator.id,
-				// exam_room_id: invigilatorData.classroom.id,
+				invigilator: invigilatorData.invigilator,
 				schedule_id: currCourse.schedule_id,
 			},
 		];
