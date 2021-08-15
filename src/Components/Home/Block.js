@@ -38,24 +38,25 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 	return (
 		<div>
 			{allotedArr.map((i) => (
-				<div className="d-flex">
+				<div key={i.id} className="d-flex">
 					<span className="alloted">
 						{i.invigilator}[{i.dept}]
 					</span>{' '}
 					&nbsp; <span className="alloted">{i.room}</span> &nbsp;{' '}
 					<span>
-						<IconButton style={{ width: '5%', marginLeft: '2.5px' }} size="small">
-							<DeleteIcon
-								fontSize="inherit"
-								onClick={() =>
-									dispatch(
-										unAllotInvigilator(data, row, col, {
-											invigilators_id: i.invigilators_id,
-											room_id: i.room_id,
-										})
-									)
-								}
-							/>
+						<IconButton
+							onClick={() =>
+								dispatch(
+									unAllotInvigilator(data, row, col, {
+										invigilators_id: i.invigilators_id,
+										room_id: i.room_id,
+									})
+								)
+							}
+							style={{ width: '5%', marginLeft: '2.5px' }}
+							size="small"
+						>
+							<DeleteIcon fontSize="inherit" />
 						</IconButton>
 					</span>
 				</div>

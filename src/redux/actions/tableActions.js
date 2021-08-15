@@ -284,8 +284,7 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 			}
 		});
 	});
-	console.log(currCourse.exam_rooms);
-	let room = currCourse.exam_rooms.findIndex((o) => o.id === invigilatorData.classroom.id);
+	let room = currCourse.exam_rooms.findIndex((o) => o.name === invigilatorData.classroom.name);
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
 	invigilatorData.classroom.exam_id = currCourse.id;
 	invigilatorData.classroom.schedule_id = currCourse.schedule_id;
@@ -299,7 +298,9 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 			schedule_id: currCourse.schedule_id,
 		});
 	} else {
-		invigilatorData.classroom.invigilatorsAlloteds = [
+		let classroom = Object.assign({}, invigilatorData.classroom);
+		delete classroom.id;
+		classroom.invigilatorsAlloteds = [
 			{
 				name: invigilatorData.invigilator.name,
 				invigilators_id: invigilatorData.invigilator.id,
@@ -307,7 +308,7 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 				schedule_id: currCourse.schedule_id,
 			},
 		];
-		currCourse.exam_rooms.push(invigilatorData.classroom);
+		currCourse.exam_rooms.push(classroom);
 	}
 	console.log(data);
 	dispatch({ type: UPDATE_INVIGILATOR, payload: rows });
