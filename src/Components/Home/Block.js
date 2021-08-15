@@ -31,14 +31,21 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 					invigilators_id: j.invigilator?.id,
 					room_id: i.room?.id,
 					dept: j.invigilator?.dept || j.dept,
+					tooltip: `${j.invigilator.dept} ${j.invigilator.stat1} ${j.invigilator.stat2 ?? ''}`,
 				});
 			});
 		});
 	}
+
 	return (
 		<div>
 			{allotedArr.map((i) => (
 				<div key={i.id} className="d-flex">
+					<Tooltip title={i.tooltip} arrow placement="top-start" style={{ width: '5%' }}>
+						<IconButton aria-label="info" size="small">
+							<InfoIcon fontSize="inherit" />
+						</IconButton>
+					</Tooltip>
 					<span className="alloted">
 						{i.invigilator}[{i.dept}]
 					</span>{' '}
@@ -91,11 +98,6 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 					</option>
 				))}
 			</select>
-			<Tooltip title="Tooltip" arrow placement="top-start" style={{ width: '5%' }}>
-				<IconButton aria-label="info" size="small">
-					<InfoIcon fontSize="inherit" />
-				</IconButton>
-			</Tooltip>
 			<IconButton
 				style={{ width: '5%' }}
 				aria-label="delete"
