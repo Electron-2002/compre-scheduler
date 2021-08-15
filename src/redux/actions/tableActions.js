@@ -284,6 +284,7 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 			}
 		});
 	});
+	console.log(currCourse.exam_rooms);
 	let room = currCourse.exam_rooms.findIndex((o) => o.id === invigilatorData.classroom.id);
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
 	invigilatorData.classroom.exam_id = currCourse.id;
@@ -298,7 +299,6 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 			schedule_id: currCourse.schedule_id,
 		});
 	} else {
-		console.log(invigilatorData.classroom);
 		invigilatorData.classroom.invigilatorsAlloteds = [
 			{
 				name: invigilatorData.invigilator.name,

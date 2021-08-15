@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -16,7 +16,8 @@ import './Block.css';
 
 const InvigilatorSelect = ({ data, row, col, invList }) => {
 	const [invigilatorData, setInvigilatorData] = useState({});
-
+	const invigilatorRef = useRef();
+	const classroomRef = useRef();
 	const dispatch = useDispatch();
 
 	const classrooms = useSelector((state) => state.table.rooms);
@@ -24,7 +25,6 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 	{
 		data.exam_rooms.map((i, k) => {
 			i.invigilatorsAlloteds.map((j) => {
-				console.log(j);
 				allotedArr.push({
 					invigilator: j.invigilator?.name || j.name,
 					room: i.room?.name || i.name,
@@ -35,7 +35,6 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 			});
 		});
 	}
-	console.log(allotedArr);
 	return (
 		<div>
 			{allotedArr.map((i) => (
@@ -63,6 +62,7 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 			))}
 			<select
 				className="invigilatorSelect"
+				ref={classroomRef}
 				onChange={(e) => {
 					let invi = invList.find((i) => i.id === e.target.value);
 					setInvigilatorData({ ...invigilatorData, invigilator: invi });
@@ -77,6 +77,7 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 			</select>
 			<select
 				className="invigilatorSelect"
+				ref={invigilatorRef}
 				onChange={(e) => {
 					let room = classrooms.find((i) => i.id === e.target.value);
 					setInvigilatorData({ ...invigilatorData, classroom: room });
@@ -101,6 +102,8 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 					if (!invigilatorData.invigilator) return;
 					dispatch(updateInvigilator(data, row, col, invigilatorData));
 					setInvigilatorData(() => {});
+					invigilatorRef.current.value = null;
+					classroomRef.current.value = null;
 				}}
 				size="small"
 			>
