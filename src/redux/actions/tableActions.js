@@ -366,3 +366,11 @@ export const output3 = (course) => () => {
 export const output4 = (inv) => () => {
 	window.open(`https://compre-scheduling.herokuapp.com/output/four/${inv}`);
 };
+
+export const output5 = () => (_, getState) => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/five/${getState().table.id}`);
+};
+
+export const output6 = () => (_, getState) => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/six/${getState().table.id}`);
+};
