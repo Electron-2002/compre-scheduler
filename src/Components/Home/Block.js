@@ -116,7 +116,6 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 
 const Block = ({ data, row, col, invList }) => {
 	const dispatch = useDispatch();
-
 	const [{ isDragging }, drag] = useDrag({
 		item: {
 			type: ItemTypes.CARD,
@@ -155,12 +154,17 @@ const Block = ({ data, row, col, invList }) => {
 				{data.course.bits_id}
 			</div>
 			<div className="instructor" onClick={() => setInstructorOpen(!instructorOpen)}>
-				Instructors ({data.instructors?.length || 0}) {instructorOpen ? '▲' : '▼'}
+				Instructors ({data.course.invigilators?.length || 0}) {instructorOpen ? '▲' : '▼'}
 			</div>
+			{instructorOpen && console.log(data)}
 			{instructorOpen ? (
 				<div className="instructorOpen">
-					{data.instructors?.map((el) => {
-						return <div style={{ padding: 2, marginBottom: 2, marginTop: 2 }}>{el}</div>;
+					{data.course.invigilators?.map((el) => {
+						return (
+							<div key={el.id} style={{ padding: 2, marginBottom: 2, marginTop: 2 }}>
+								{el.name}
+							</div>
+						);
 					})}
 				</div>
 			) : null}
