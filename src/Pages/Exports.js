@@ -10,7 +10,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Navigation from '../Components/Home/Navigation';
 import './Home.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { output1, output2, output3, output4 } from '../redux/actions/tableActions';
+import { output1, output2, output3, output4, output5, output6 } from '../redux/actions/tableActions';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import { invCompare } from '../utils/sort';
 
@@ -30,6 +30,14 @@ const data = [
 	{
 		title: 'Details of duties given for invigilators',
 		desc: 'Grouped by IC, PhD, ME, TA\n(Date, Time, Course No. Course Title, Email, Mobile)',
+	},
+	{
+		title: 'Report in Excel',
+		desc: 'Invigilators with more than one duty per day',
+	},
+	{
+		title: 'Report in Excel',
+		desc: "Every invigilators' no of invigilation with a column denoting their designation",
 	},
 ];
 
@@ -195,6 +203,48 @@ const Exports = () => {
 							variant="contained"
 							color="primary"
 							onClick={output4Handler}
+						>
+							Export
+						</Button>
+					</Grid>
+				</Grid>
+
+				<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
+					<Grid item xs={8}>
+						<Typography variant="body1">
+							<Box fontWeight="fontWeightBold" marginBottom={1}>
+								{data[4].title}
+							</Box>
+							<Box fontSize={14}>{data[4].desc}</Box>
+						</Typography>
+					</Grid>
+					<Grid item xs={3} className="mt-auto">
+						<Button
+							className="savedScheduleButton"
+							variant="contained"
+							color="primary"
+							onClick={() => dispatch(output5())}
+						>
+							Export
+						</Button>
+					</Grid>
+				</Grid>
+
+				<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
+					<Grid item xs={8}>
+						<Typography variant="body1">
+							<Box fontWeight="fontWeightBold" marginBottom={1}>
+								{data[5].title}
+							</Box>
+							<Box fontSize={14}>{data[5].desc}</Box>
+						</Typography>
+					</Grid>
+					<Grid item xs={3} className="mt-auto">
+						<Button
+							className="savedScheduleButton"
+							variant="contained"
+							color="primary"
+							onClick={() => dispatch(output6())}
 						>
 							Export
 						</Button>
