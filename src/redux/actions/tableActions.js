@@ -257,8 +257,11 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 	});
 
 	let room_id = invigilatorData.room_id;
+	// console.log(invigilatorData);
+	console.log(currCourse.exam_rooms);
+	let room_name = invigilatorData.room_name;
 	let invigilator_id = invigilatorData.invigilators_id;
-	let room_idx = currCourse.exam_rooms.findIndex((o) => o.id === room_id);
+	let room_idx = currCourse.exam_rooms.findIndex((o) => o.name || o.room.name === room_name);
 	let invigilator_idx = currCourse.exam_rooms[room_idx].invigilatorsAlloteds.findIndex(
 		(o) => o.invigilators_id === invigilator_id
 	);

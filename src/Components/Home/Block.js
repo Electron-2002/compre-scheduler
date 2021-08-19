@@ -57,6 +57,7 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 									unAllotInvigilator(data, row, col, {
 										invigilators_id: i.invigilators_id,
 										room_id: i.room_id,
+										room_name: i.room,
 									})
 								)
 							}
@@ -158,7 +159,6 @@ const Block = ({ data, row, col, invList }) => {
 			<div className="instructor" onClick={() => setInstructorOpen(!instructorOpen)}>
 				Instructors ({data.course.invigilators?.length || 0}) {instructorOpen ? '▲' : '▼'}
 			</div>
-			{instructorOpen && console.log(data)}
 			{instructorOpen ? (
 				<div className="instructorOpen">
 					{data.course.invigilators?.map((el) => {
