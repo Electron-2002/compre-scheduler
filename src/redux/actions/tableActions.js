@@ -259,9 +259,8 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 	let room_id = invigilatorData.room_id;
 	// console.log(invigilatorData);
 	console.log(currCourse.exam_rooms);
-	let room_name = invigilatorData.room_name;
 	let invigilator_id = invigilatorData.invigilators_id;
-	let room_idx = currCourse.exam_rooms.findIndex((o) => o.name || o.room.name === room_name);
+	let room_idx = currCourse.exam_rooms.findIndex((o) => o.room_id || o.room.id === room_id);
 	let invigilator_idx = currCourse.exam_rooms[room_idx].invigilatorsAlloteds.findIndex(
 		(o) => o.invigilators_id === invigilator_id
 	);
@@ -277,20 +276,18 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 	const rows = getState().table.rows;
 	let blocks = rows[row].data[col];
 	let currCourse = {};
-	let blockIdx, courseIdx;
 	blocks.forEach(({ courses }, i) => {
-		blockIdx = i;
 		courses.forEach((course, j) => {
-			courseIdx = j;
 			if (course.id === data.id) {
 				currCourse = course;
 			}
 		});
 	});
-	let room = currCourse.exam_rooms.findIndex((o) => o.name === invigilatorData.classroom.name);
+	let room = currCourse.exam_rooms.findIndex((o) => o.name || o.room.name === invigilatorData.classroom.name);
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
 	invigilatorData.classroom.exam_id = currCourse.id;
 	invigilatorData.classroom.schedule_id = currCourse.schedule_id;
+	console.log(room);
 	if (room !== -1) {
 		let invigilatorArr = currCourse.exam_rooms[room].invigilatorsAlloteds;
 		invigilatorArr.push({
@@ -342,6 +339,7 @@ export const updateSchedule = () => async (dispatch, getState) => {
 		const result = await backend.put(`/schedule/${getState().table.id}`, {
 			exams,
 		});
+		console.log(result);
 	} catch (e) {
 		console.log(e);
 	}
