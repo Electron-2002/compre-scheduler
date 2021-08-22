@@ -41,6 +41,9 @@ const UserHome = () => {
 	};
 	const createNew = async (e) => {
 		e.preventDefault();
+
+		if (endDate < startDate) return;
+
 		const scheduleData = {
 			name: scheduleName,
 			slots_each_day: 2,
@@ -115,7 +118,6 @@ const UserHome = () => {
 										<KeyboardDatePicker
 											disableToolbar
 											minDate={startDate}
-											// variant="inline"
 											format="dd/MM/yyyy"
 											margin="normal"
 											id="date-picker-inline"
@@ -123,6 +125,7 @@ const UserHome = () => {
 											required
 											value={endDate}
 											onChange={handleEndDateChange}
+											minDateMessage="Date should not be before start date"
 											KeyboardButtonProps={{
 												'aria-label': 'change date',
 											}}
