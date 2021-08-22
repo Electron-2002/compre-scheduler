@@ -46,7 +46,7 @@ const MainTable = () => {
 								className="bg-blue p-20px cell-border-left styledTableCellHead"
 								align="center"
 							>
-								{row.name[5] === '1' ? '9-12' : '2-5'}
+								{row.name[5] === '1' ? '9AM - 12PM' : '2PM - 5PM'}
 							</TableCell>
 						))}
 					</TableRow>
