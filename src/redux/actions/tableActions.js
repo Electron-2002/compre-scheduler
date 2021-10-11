@@ -75,7 +75,11 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 			}
 		});
 
-		const courseList = exams.map((exam) => ({ id: exam.course.bits_id, name: exam.course.title }));
+		const courseList = exams.map((exam) => ({
+			id: exam.course.id,
+			bitsId: exam.course.bits_id,
+			name: exam.course.title,
+		}));
 
 		const invigilators = await backend.post('/invigilator/getAll');
 		const rooms = await backend.post('/room/getAll');
@@ -362,12 +366,12 @@ export const output2 = () => (_, getState) => {
 	window.open(`https://compre-scheduling.herokuapp.com/output/two/${getState().table.id}`);
 };
 
-export const output3 = (course) => () => {
-	window.open(`https://compre-scheduling.herokuapp.com/output/three/${course}`);
+export const output3 = (course) => (_, getState) => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/three/${getState().table.id}/${course}`);
 };
 
-export const output4 = (inv) => () => {
-	window.open(`https://compre-scheduling.herokuapp.com/output/four/${inv}`);
+export const output4 = (inv) => (_, getState) => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/four/${getState().table.id}/${inv}`);
 };
 
 export const output5 = () => (_, getState) => {
