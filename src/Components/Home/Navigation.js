@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout, updateSchedule } from '../../redux/actions/tableActions';
+import { Switch } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -44,7 +45,7 @@ const StyledMenu = withStyles({
 ));
 
 export default function MenuAppBar(props) {
-	const { showSave, showExport } = props;
+	const { showSave, showExport, toggle, setToggle } = props;
 
 	const classes = useStyles();
 
@@ -85,6 +86,7 @@ export default function MenuAppBar(props) {
 							EXPORT
 						</Button>
 					)}
+					<Switch value={toggle} onChange={(e) => setToggle(e.target.checked)} />
 					<Typography variant="h6" className={classes.title}>
 						COMPRE SCHEDULER
 					</Typography>
