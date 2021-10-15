@@ -29,3 +29,9 @@
 	align-items: flex-end;
 	justify-content: center;
 }
+.d-flex {
+	display: flex;
+}
+.col {
+	flex-direction: column;
+}
