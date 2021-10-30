@@ -28,6 +28,7 @@ const MainTable = () => {
 	const rows = table.rows;
 	const dates = table.dates;
 	const invigilators = table.invigilators;
+	const slots = table.slots;
 
 	return (
 		<TableContainer style={{ height: 'calc(100vh - 64px)' }} component={Paper}>
@@ -37,7 +38,7 @@ const MainTable = () => {
 						<TableCell className="styledTableCellHead" width="40px" align="center">
 							Dates
 						</TableCell>
-						{rows?.map((row, i) => (
+						{slots?.map((slot, i) => (
 							<TableCell
 								key={i}
 								width="100px"
@@ -46,7 +47,7 @@ const MainTable = () => {
 								className="bg-blue p-20px cell-border-left styledTableCellHead"
 								align="center"
 							>
-								{row.name[5] === '1' ? '9AM - 12PM' : '2PM - 5PM'}
+								{slot}
 							</TableCell>
 						))}
 					</TableRow>

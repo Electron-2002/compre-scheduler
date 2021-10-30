@@ -16,6 +16,7 @@ const initialState = {
 	invigilators: [],
 	rooms: [],
 	courseList: [],
+	slots: [],
 };
 
 const tableReducer = (state = initialState, { type, payload }) => {
@@ -30,6 +31,7 @@ const tableReducer = (state = initialState, { type, payload }) => {
 				invigilators: payload.invigilators,
 				rooms: payload.rooms,
 				courseList: payload.courseList,
+				slots: payload.slots,
 			};
 
 		case ADD_BLOCK:

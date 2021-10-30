@@ -10,25 +10,18 @@ const groupByDate = (table, dates) => {
 		let b = d.toISOString().substring(0, 10);
 		examByDate[b] = [];
 	});
-	table.rows[0].data.forEach((i) => {
-		i.forEach((k) => {
-			k.courses.forEach((l) => {
-				let currDate = l.date.substring(0, 10);
-				if (!examByDate[currDate]) examByDate[currDate] = [];
-				examByDate[currDate].push({ course: l.course.bits_id, slot: 1 });
+
+	for (let index = 0; index < table.slots.length; index++) {
+		table.rows[index].data.forEach((i) => {
+			i.forEach((k) => {
+				k.courses.forEach((l) => {
+					let currDate = l.date.substring(0, 10);
+					if (!examByDate[currDate]) examByDate[currDate] = [];
+					examByDate[currDate].push({ course: l.course.bits_id, slot: index });
+				});
 			});
 		});
-	});
-	table.rows[1].data.forEach((i) => {
-		i.forEach((k) => {
-			k.courses.forEach((l) => {
-				let currDate = l.date.substring(0, 10);
-				if (!examByDate[currDate]) examByDate[currDate] = [];
-				examByDate[currDate].push({ course: l.course.bits_id, slot: 2 });
-			});
-		});
-	});
-	console.log(examByDate);
+	}
 	return examByDate;
 };
 
@@ -53,16 +46,14 @@ const View = () => {
 							return (
 								<TableCell>
 									<div className="d-flex col">
-										<Chip label="Slot 1" color="primary" size="small" />
-										{examByDate[j].map((i, l) => {
-											if (i.slot == 1)
-												return <Chip variant="outlined" label={i.course} size="small" />;
-										})}
-										<Chip label="Slot 1" color="primary" size="small" />
-										{examByDate[j].map((i, l) => {
-											if (i.slot == 2)
-												return <Chip variant="outlined" label={i.course} size="small" />;
-										})}
+										{table.slots.map((slot) => (
+											<>
+												<Chip label={slot} color="primary" size="small" />
+												{examByDate[j].map((i) => (
+													<Chip variant="outlined" label={i.course} size="small" />
+												))}
+											</>
+										))}
 									</div>
 								</TableCell>
 							);

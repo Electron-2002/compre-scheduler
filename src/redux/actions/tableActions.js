@@ -18,12 +18,13 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 	try {
 		const result = await backend.post(`/schedule/${scheduleId}`);
 		const { schedule, exams } = result.data;
+		const { slots } = schedule;
 
 		const days = getDatesArray(schedule.start_date, schedule.end_date);
 
 		let rows = [];
-		for (let i = 0; i < schedule.slots_each_day; ++i) {
-			rows.push({ name: `Slot ${i + 1}`, data: [] });
+		for (let i = 0; i < slots.length; ++i) {
+			rows.push({ data: [] });
 		}
 
 		const dates = days.map((day) => ({
@@ -46,15 +47,16 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 		});
 
 		dates.forEach(() => {
-			rows[0].data.push([]);
-			rows[1].data.push([]);
+			for (let i = 0; i < slots.length; ++i) {
+				rows[i].data.push([]);
+			}
 		});
 
 		exams.forEach((exam) => {
 			for (let i = 0; i < blocks.length; ++i) {
 				if (blocks[i].slot === exam.course.block) {
 					if (exam.date != null) {
-						const r = exam.time === '9-12' ? 0 : 1;
+						const r = slots.findIndex((f) => f === exam.time);
 						const c = days_between(exam.date, schedule.start_date);
 
 						let flag = false;
@@ -94,6 +96,7 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 				invigilators: invigilators.data.invigilator,
 				rooms: rooms.data.rooms,
 				courseList,
+				slots,
 			},
 		});
 		dispatch(setLoading(false));
@@ -161,7 +164,7 @@ export const addToTarget = (exam, row, col) => async (dispatch, getState) => {
 	const finalCourse = {
 		...exam,
 		date: changeDateFormat(getState().table.dates[col].exact),
-		time: row === 0 ? '9-12' : '2-5',
+		time: getState().table.slots[row],
 	};
 
 	const rows = getState().table.rows;
@@ -182,7 +185,6 @@ export const addToTarget = (exam, row, col) => async (dispatch, getState) => {
 	});
 
 	if (!flag) {
-		console.log({ slot: finalCourse.course.block, courses: [finalCourse] });
 		newBlocks = [...blocks, { slot: finalCourse.course.block, courses: [finalCourse] }];
 	}
 
@@ -261,16 +263,12 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 	});
 
 	let room_id = invigilatorData.room_id;
-	// console.log(invigilatorData);
-	console.log(currCourse.exam_rooms);
 	let invigilator_id = invigilatorData.invigilators_id;
 	let room_idx = currCourse.exam_rooms.findIndex((o) => o.room_id || o.room.id === room_id);
 	let invigilator_idx = currCourse.exam_rooms[room_idx].invigilatorsAlloteds.findIndex(
 		(o) => o.invigilator.id === invigilator_id
 	);
-	console.log(currCourse);
 	currCourse.exam_rooms[room_idx].invigilatorsAlloteds.splice(invigilator_idx, 1);
-	console.log(currCourse);
 	if (currCourse.exam_rooms[room_idx].invigilatorsAlloteds.length === 0) currCourse.exam_rooms.splice(room_idx, 1);
 	let newRows = [...rows];
 	newRows[row].data[col][blockIdx].courses[courseIdx] = currCourse;
@@ -278,7 +276,6 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 };
 
 export const updateInvigilator = (data, row, col, invigilatorData) => async (dispatch, getState) => {
-	console.log(invigilatorData);
 	const rows = getState().table.rows;
 	let blocks = rows[row].data[col];
 	let currCourse = {};
@@ -293,7 +290,6 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
 	invigilatorData.classroom.exam_id = currCourse.id;
 	invigilatorData.classroom.schedule_id = currCourse.schedule_id;
-	console.log(room);
 	if (room !== -1) {
 		let invigilatorArr = currCourse.exam_rooms[room].invigilatorsAlloteds;
 		invigilatorArr.push({
@@ -316,7 +312,6 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 		];
 		currCourse.exam_rooms.push(classroom);
 	}
-	console.log(data);
 	dispatch({ type: UPDATE_INVIGILATOR, payload: rows });
 };
 
@@ -347,7 +342,7 @@ export const updateSchedule = () => async (dispatch, getState) => {
 		});
 		console.log(result);
 	} catch (e) {
-		console.log(e);
+		console.log(e.response.data);
 	}
 	dispatch(setLoading(false));
 };

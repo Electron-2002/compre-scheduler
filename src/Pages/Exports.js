@@ -152,7 +152,6 @@ const Exports = () => {
 							<InputLabel>Course</InputLabel>
 							<Select value={course} onChange={handleChangeCourse}>
 								{courseList.map((course) => {
-									console.log(course);
 									return (
 										<MenuItem value={course.id} key={course.id}>
 											{course.bitsId}: {course.name}

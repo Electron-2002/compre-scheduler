@@ -8,7 +8,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import { Redirect } from 'react-router-dom';
 import './Home.css';
 import backend from '../backend';
-import Loading from '../Components/Loading/Loading';
+import { Chip } from '@material-ui/core';
 
 const UserHome = () => {
 	const userId = sessionStorage.getItem('userId');
@@ -18,6 +18,8 @@ const UserHome = () => {
 	const [scheduleName, setScheduleName] = useState();
 	const [endDate, setEndDate] = useState(new Date());
 	const [redirect, setRedirect] = useState(false);
+	const [slots, setSlots] = useState([]);
+	const [tempSlot, setTempSlot] = useState('');
 
 	const fetchUserSchedules = async () => {
 		let response = await backend.post('/user/schedules', new URLSearchParams({ userId: userId }));
@@ -46,13 +48,18 @@ const UserHome = () => {
 
 		const scheduleData = {
 			name: scheduleName,
-			slots_each_day: 2,
 			start_date: startDate.toISOString(),
 			end_date: endDate.toISOString(),
+			slots,
 		};
-		await backend.post(`/schedule/create/${userId}`, new URLSearchParams(scheduleData));
+		await backend.post(`/schedule/create/${userId}`, scheduleData);
 		fetchUserSchedules();
 		document.scheduleForm.reset();
+	};
+
+	const addSlotHandler = () => {
+		setSlots((prev) => [...prev, tempSlot]);
+		setTempSlot('');
 	};
 
 	return (
@@ -66,9 +73,6 @@ const UserHome = () => {
 			)}
 			<Navigation />
 			<Grid container justify="space-around" className="main-container">
-				{/* <Grid item xs={5}>
-					<p>Will put some illustration here</p>
-				</Grid> */}
 				<Grid item xs={5}>
 					<Grid item xs={12} container className="savedSchedule">
 						{userSchedules.map((i, k) => (
@@ -133,17 +137,37 @@ const UserHome = () => {
 									</Grid>
 									<Grid item xs={5}>
 										<TextField
-											disabled
-											required
 											style={{ marginTop: 16, width: '100%' }}
-											type="number"
-											value={2}
-											InputProps={{ inputProps: { min: 1, max: 10 } }}
-											label="No of Slots"
+											value={tempSlot}
+											onChange={(e) => setTempSlot(e.target.value)}
+											label="Slot (Eg. 9-10:30)"
 										/>
 									</Grid>
 									<Grid item xs={5} className="btn">
-										<Button variant="contained" color="primary" type="submit">
+										<Button
+											variant="contained"
+											color="primary"
+											onClick={addSlotHandler}
+											style={{ width: '100%' }}
+										>
+											Add Slot
+										</Button>
+									</Grid>
+									<Grid container xs={10} style={{ marginTop: 16 }}>
+										{slots.map((slot) => (
+											<Grid item key={slot}>
+												<Chip variant="outlined" label={slot} size="medium" />
+											</Grid>
+										))}
+									</Grid>
+
+									<Grid item xs={12} className="btn">
+										<Button
+											variant="contained"
+											color="primary"
+											type="submit"
+											style={{ marginTop: 16 }}
+										>
 											Create New Schedule
 										</Button>
 									</Grid>
