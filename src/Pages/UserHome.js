@@ -55,11 +55,17 @@ const UserHome = () => {
 		await backend.post(`/schedule/create/${userId}`, scheduleData);
 		fetchUserSchedules();
 		document.scheduleForm.reset();
+		setSlots([]);
+		setTempSlot('');
 	};
 
 	const addSlotHandler = () => {
 		setSlots((prev) => [...prev, tempSlot]);
 		setTempSlot('');
+	};
+
+	const deleteSlotHandler = (text) => {
+		setSlots((prev) => prev.filter((s) => s !== text));
 	};
 
 	return (
@@ -156,7 +162,13 @@ const UserHome = () => {
 									<Grid container xs={10} style={{ marginTop: 16 }}>
 										{slots.map((slot) => (
 											<Grid item key={slot}>
-												<Chip variant="outlined" label={slot} size="medium" />
+												<Chip
+													variant="outlined"
+													label={`${slot} X`}
+													size="medium"
+													style={{ cursor: 'pointer' }}
+													onClick={() => deleteSlotHandler(slot)}
+												/>
 											</Grid>
 										))}
 									</Grid>
