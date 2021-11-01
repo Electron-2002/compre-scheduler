@@ -26,7 +26,7 @@ const Home = (props) => {
 				<Loading />
 			) : (
 				<>
-					<Navigation showSave showExport toggle={toggle} setToggle={setToggle} />
+					<Navigation showSwitch showSave showExport toggle={toggle} setToggle={setToggle} />
 					{toggle ? (
 						<View />
 					) : (

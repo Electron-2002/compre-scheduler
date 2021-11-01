@@ -1,3 +1,6 @@
 .MuiChip-root {
 	margin: 5px 0;
 }
+.view-tablecell {
+	vertical-align: baseline !important;
+}

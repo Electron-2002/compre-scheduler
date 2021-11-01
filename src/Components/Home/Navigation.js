@@ -45,7 +45,7 @@ const StyledMenu = withStyles({
 ));
 
 export default function MenuAppBar(props) {
-	const { showSave, showExport, toggle, setToggle } = props;
+	const { showSave, showExport, toggle, setToggle, showSwitch } = props;
 
 	const classes = useStyles();
 
@@ -86,7 +86,7 @@ export default function MenuAppBar(props) {
 							EXPORT
 						</Button>
 					)}
-					<Switch value={toggle} onChange={(e) => setToggle(e.target.checked)} />
+					{showSwitch && <Switch value={toggle} onChange={(e) => setToggle(e.target.checked)} />}
 					<Typography variant="h6" className={classes.title}>
 						COMPRE SCHEDULER
 					</Typography>
