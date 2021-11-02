@@ -262,18 +262,15 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 		});
 	});
 
-	let room_id = invigilatorData.room_id;
+	let room_name = invigilatorData.room_name;
 	let invigilator_id = invigilatorData.invigilators_id;
-	let room_idx = currCourse.exam_rooms.findIndex((o) => o.room_id === room_id || o.room?.id === room_id);
-	console.log(courseIdx);
+	let room_idx = currCourse.exam_rooms.findIndex((o) => (o.name || o.room.name) === room_name);
 	let invigilator_idx = currCourse.exam_rooms[room_idx].invigilatorsAlloteds.findIndex(
 		(o) => o.invigilator.id === invigilator_id
 	);
-	console.log(rows[row].data[col][blockIdx].courses[courseIdx]);
 	currCourse.exam_rooms[room_idx].invigilatorsAlloteds.splice(invigilator_idx, 1);
 	if (currCourse.exam_rooms[room_idx].invigilatorsAlloteds.length === 0) currCourse.exam_rooms.splice(room_idx, 1);
 	let newRows = [...rows];
-	console.log(newRows[row].data[col][blockIdx].courses[courseIdx]);
 	newRows[row].data[col][blockIdx].courses[courseIdx] = currCourse;
 	dispatch({ type: UNALLOT_INVIGILATOR, payload: rows });
 };
