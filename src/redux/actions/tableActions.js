@@ -286,7 +286,8 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 			}
 		});
 	});
-	let room = currCourse.exam_rooms.findIndex((o) => o.name || o.room.name === invigilatorData.classroom.name);
+
+	let room = currCourse.exam_rooms.findIndex((o) => (o.name || o.room.name) === invigilatorData.classroom.name);
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
 	invigilatorData.classroom.exam_id = currCourse.id;
 	invigilatorData.classroom.schedule_id = currCourse.schedule_id;
