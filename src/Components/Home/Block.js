@@ -136,7 +136,7 @@ const Block = ({ data, row, col, invList }) => {
 	let allotedCapacity = 0;
 	data.exam_rooms.forEach((i) => {
 		totalInvigilatorsAlloted += i.invigilatorsAlloteds?.length;
-		allotedCapacity += i.capacity;
+		allotedCapacity += +i.capacity;
 	});
 
 	return (
