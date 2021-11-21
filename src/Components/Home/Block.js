@@ -79,7 +79,7 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 				<option value="null">-----------</option>
 				{invList.map((el) => (
 					<option value={el.id} key={el.id} style={el.alreadyAllotted ? { backgroundColor: 'red' } : {}}>
-						{el.name} [{el.dept}] {el.alreadyAllotted && '(Same day other slot allotted)'}
+						{el.name} [{`${el.dept} ${el.stat1}`}] {el.alreadyAllotted && '(Same day other slot allotted)'}
 					</option>
 				))}
 			</select>
