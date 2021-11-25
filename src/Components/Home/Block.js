@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-const InvigilatorSelect = ({ data, row, col, invList }) => {
+const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 	const [invigilatorData, setInvigilatorData] = useState({});
 	const invigilatorRef = useRef();
 	const classroomRef = useRef();
@@ -31,10 +31,24 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 					room_id: i.room?.id,
 					dept: j.invigilator?.dept || j.dept,
 					tooltip: `${j.invigilator.dept} ${j.invigilator.stat1} ${j.invigilator.stat2 ?? ''}`,
+					assignedDuties: j.invigilator.assignedDuties,
 				});
 			});
 		});
 	}
+	const teamIds = teamList.map((member) => member.id);
+	invList.forEach((inv, k) => {
+		if (teamIds.includes(inv.id)) {
+			inv['isTeamMember'] = true;
+		} else {
+			inv['isTeamMember'] = false;
+		}
+	});
+	let newList = invList
+		.sort(function (a, b) {
+			return a.isTeamMember - b.isTeamMember;
+		})
+		.reverse();
 
 	return (
 		<div>
@@ -57,6 +71,7 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 										invigilators_id: i.invigilators_id,
 										room_id: i.room_id,
 										room_name: i.room,
+										invigilator: i,
 									})
 								)
 							}
@@ -77,11 +92,16 @@ const InvigilatorSelect = ({ data, row, col, invList }) => {
 				}}
 			>
 				<option value="null">-----------</option>
-				{invList.map((el) => (
-					<option value={el.id} key={el.id} style={el.alreadyAllotted ? { backgroundColor: 'red' } : {}}>
-						{el.name} [{`${el.dept} ${el.stat1}`}] {el.alreadyAllotted && '(Same day other slot allotted)'}
-					</option>
-				))}
+				{invList.map((el) => {
+					return +el.duties_to_be_alloted > el.assignedDuties ? (
+						<option value={el.id} key={el.id} style={el.alreadyAllotted ? { backgroundColor: 'red' } : {}}>
+							{el.name} [{`${el.dept} ${el.stat1}`}] {el.isTeamMember ? '[Team Member]' : ''}
+							{el.alreadyAllotted && '(Same day other slot allotted)'}
+						</option>
+					) : (
+						''
+					);
+				})}
 			</select>
 			<select
 				className="invigilatorSelect"
@@ -176,7 +196,13 @@ const Block = ({ data, row, col, invList }) => {
 
 			{invigilatorOpen ? (
 				<div className="invigilatorOpen">
-					<InvigilatorSelect row={row} col={col} data={data} invList={invList} />
+					<InvigilatorSelect
+						row={row}
+						col={col}
+						data={data}
+						teamList={data.course.invigilators}
+						invList={invList}
+					/>
 				</div>
 			) : null}
 

@@ -83,7 +83,7 @@ export const fetchData = (scheduleId) => async (dispatch) => {
 			name: exam.course.title,
 		}));
 
-		const invigilators = await backend.post('/invigilator/getAll');
+		const invigilators = await backend.post('/invigilator/getAll/' + scheduleId);
 		const rooms = await backend.post('/room/getAll');
 
 		dispatch({
@@ -261,9 +261,13 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 			}
 		});
 	});
+	// invigilatorData.invigilator.assignedDuties--;
 
 	let room_name = invigilatorData.room_name;
 	let invigilator_id = invigilatorData.invigilators_id;
+
+	getState().table.invigilators.filter((o) => o.id === invigilator_id)[0].assignedDuties--;
+
 	let room_idx = currCourse.exam_rooms.findIndex((o) => (o.name || o.room.name) === room_name);
 	let invigilator_idx = currCourse.exam_rooms[room_idx].invigilatorsAlloteds.findIndex(
 		(o) => o.invigilator.id === invigilator_id
@@ -286,6 +290,8 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 			}
 		});
 	});
+	invigilatorData.invigilator.assignedDuties++;
+	console.log(invigilatorData);
 
 	let room = currCourse.exam_rooms.findIndex((o) => (o.name || o.room.name) === invigilatorData.classroom.name);
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
