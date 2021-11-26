@@ -10,7 +10,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Navigation from '../Components/Home/Navigation';
 import './Home.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { output1, output2, output3, output4, output5, output6 } from '../redux/actions/tableActions';
+import { output1, output2, output3, output4, output5, output6, output7 } from '../redux/actions/tableActions';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import { invCompare } from '../utils/sort';
 
@@ -38,6 +38,10 @@ const data = [
 	{
 		title: 'Report in Excel',
 		desc: "Every invigilators' no of invigilation with a column denoting their designation",
+	},
+	{
+		title: 'Report in Excel',
+		desc: 'Allotting classrooms to students based on registration data',
 	},
 ];
 
@@ -76,7 +80,7 @@ const Exports = () => {
 	return (
 		<div>
 			<Navigation />
-			<Grid container justify="space-around" className="main-container">
+			<Grid container justify="space-around" className="main-container" style={{ marginTop: -10 }}>
 				<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
 					<Grid item xs={8}>
 						<Typography variant="body1">
@@ -247,6 +251,27 @@ const Exports = () => {
 							variant="contained"
 							color="primary"
 							onClick={() => dispatch(output6())}
+						>
+							Export
+						</Button>
+					</Grid>
+				</Grid>
+
+				<Grid container xs={5} className="savedSchedule" justify="space-between" alignItems="center">
+					<Grid item xs={8}>
+						<Typography variant="body1">
+							<Box fontWeight="fontWeightBold" marginBottom={1}>
+								{data[6].title}
+							</Box>
+							<Box fontSize={14}>{data[6].desc}</Box>
+						</Typography>
+					</Grid>
+					<Grid item xs={3} className="mt-auto">
+						<Button
+							className="savedScheduleButton"
+							variant="contained"
+							color="primary"
+							onClick={() => dispatch(output7())}
 						>
 							Export
 						</Button>

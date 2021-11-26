@@ -383,3 +383,7 @@ export const output5 = () => (_, getState) => {
 export const output6 = () => (_, getState) => {
 	window.open(`https://compre-scheduling.herokuapp.com/output/six/${getState().table.id}`);
 };
+
+export const output7 = () => (_, getState) => {
+	window.open(`https://compre-scheduling.herokuapp.com/output/seven/${getState().table.id}`);
+};
