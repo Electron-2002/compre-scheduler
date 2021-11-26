@@ -20,6 +20,8 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 	const dispatch = useDispatch();
 
 	const classrooms = useSelector((state) => state.table.rooms);
+	const dates = useSelector((state) => state.table.dates);
+
 	let allotedArr = [];
 	{
 		data.exam_rooms.map((i, k) => {
@@ -44,7 +46,7 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 			inv['isTeamMember'] = false;
 		}
 	});
-	let newList = invList
+	invList
 		.sort(function (a, b) {
 			return a.isTeamMember - b.isTeamMember;
 		})
@@ -92,16 +94,30 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 				}}
 			>
 				<option value="null">-----------</option>
-				{invList.map((el) => {
-					return +el.duties_to_be_alloted > el.assignedDuties ? (
+				{invList
+					.filter((el) => +el.duties_to_be_alloted > el.assignedDuties)
+					.filter((el) => {
+						if (el.unavailableDates) {
+							for (let idx = 0; idx < el.unavailableDates.length; ++idx) {
+								const day = new Date(+el.unavailableDates[idx]);
+								console.log(day, el.name);
+								if (
+									day.getFullYear() === dates[col].exact.getFullYear() &&
+									day.getMonth() === dates[col].exact.getMonth() &&
+									day.getDate() === dates[col].exact.getDate()
+								) {
+									return false;
+								}
+							}
+						}
+						return true;
+					})
+					.map((el) => (
 						<option value={el.id} key={el.id} style={el.alreadyAllotted ? { backgroundColor: 'red' } : {}}>
 							{el.name} [{`${el.dept} ${el.stat1}`}] {el.isTeamMember ? '[Team Member]' : ''}
 							{el.alreadyAllotted && '(Same day other slot allotted)'}
 						</option>
-					) : (
-						''
-					);
-				})}
+					))}
 			</select>
 			<select
 				className="invigilatorSelect"
