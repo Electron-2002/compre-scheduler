@@ -175,6 +175,8 @@ const Block = ({ data, row, col, invList }) => {
 		allotedCapacity += +i.capacity;
 	});
 
+	if (allotedCapacity > data.course.capacity) allotedCapacity = data.course.capacity;
+
 	return (
 		<Box
 			ref={drag}
