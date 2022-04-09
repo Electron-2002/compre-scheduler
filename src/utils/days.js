@@ -1,4 +1,4 @@
-export const dayIndex = ['MON', 'TUE', 'WED', 'THURS', 'FRI', 'SAT', 'SUN'];
+export const dayIndex = ['SUN', 'MON', 'TUE', 'WED', 'THURS', 'FRI', 'SAT'];
 
 export const getDatesArray = (startDate, endDate) => {
 	const arr = [];
@@ -12,7 +12,7 @@ export const getDatesArray = (startDate, endDate) => {
 };
 
 export const formatDate = (date) => {
-	return date.getDate() + '/' + date.getMonth() + ' ' + dayIndex[date.getDay()];
+	return date.getDate() + '/' + (date.getMonth() + 1) + ' ' + dayIndex[date.getDay()];
 };
 
 export const changeDateFormat = (date) => {
