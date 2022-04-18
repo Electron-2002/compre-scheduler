@@ -17,6 +17,10 @@
 	margin-top: 50px !important;
 	border-radius: 8px;
 }
+.scheduleContainer {
+	display: flex;
+	align-items: center;
+}
 .savedScheduleButton {
 	margin: 10px !important;
 }

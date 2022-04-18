@@ -9,6 +9,8 @@ import { Redirect } from 'react-router-dom';
 import './Home.css';
 import backend from '../backend';
 import { Chip } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const UserHome = () => {
 	const userId = sessionStorage.getItem('userId');
@@ -24,6 +26,14 @@ const UserHome = () => {
 	const fetchUserSchedules = async () => {
 		let response = await backend.post('/user/schedules', new URLSearchParams({ userId: userId }));
 		setUserSchedules(response.data.sched);
+	};
+
+	const deleteUserSchedule = async (scheduleId) => {
+		if (window.confirm('Are you sure you want to delete this schedule?')) {
+			await backend.delete(`/schedule/${scheduleId}`);
+
+			fetchUserSchedules();
+		}
 	};
 
 	useEffect(() => {
@@ -82,7 +92,7 @@ const UserHome = () => {
 				<Grid item xs={5}>
 					<Grid item xs={12} container className="savedSchedule">
 						{userSchedules.map((i, k) => (
-							<Grid item className="mt-auto" key={k}>
+							<Grid item className="mt-auto scheduleContainer" key={k}>
 								<Button
 									className="savedScheduleButton"
 									variant="contained"
@@ -91,6 +101,13 @@ const UserHome = () => {
 								>
 									{i.name}
 								</Button>
+								<IconButton
+									style={{ marginLeft: '-10px' }}
+									size="small"
+									onClick={() => deleteUserSchedule(i.id)}
+								>
+									<DeleteIcon />
+								</IconButton>
 							</Grid>
 						))}
 					</Grid>
