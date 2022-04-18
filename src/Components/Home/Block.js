@@ -39,18 +39,23 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 		});
 	}
 	const teamIds = teamList.map((member) => member.id);
-	invList.forEach((inv, k) => {
+	invList.forEach((inv) => {
 		if (teamIds.includes(inv.id)) {
 			inv['isTeamMember'] = true;
-		} else {
+			inv['priority'] = 0;
+		} else if (inv.dept === data.course.discipline) {
 			inv['isTeamMember'] = false;
+			if (inv.stat1 && inv.stat1.toLowerCase().includes('professor')) {
+				inv['priority'] = 1;
+			} else if (inv.stat1 && inv.stat1.toLowerCase().includes('phd')) {
+				inv['priority'] = 2;
+			} else if (inv.stat1 && inv.stat1.toLowerCase().includes('me ta')) {
+				inv['priority'] = 3;
+			}
+		} else {
+			inv['priority'] = 100;
 		}
 	});
-	invList
-		.sort(function (a, b) {
-			return a.isTeamMember - b.isTeamMember;
-		})
-		.reverse();
 
 	return (
 		<div>
@@ -100,7 +105,6 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 						if (el.unavailableDates) {
 							for (let idx = 0; idx < el.unavailableDates.length; ++idx) {
 								const day = new Date(+el.unavailableDates[idx]);
-								console.log(day, el.name);
 								if (
 									day.getFullYear() === dates[col].exact.getFullYear() &&
 									day.getMonth() === dates[col].exact.getMonth() &&
@@ -112,6 +116,7 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 						}
 						return true;
 					})
+					.sort((a, b) => a.priority - b.priority)
 					.map((el) => (
 						<option value={el.id} key={el.id} style={el.alreadyAllotted ? { backgroundColor: 'red' } : {}}>
 							{el.name} [{`${el.dept} ${el.stat1}`}] {el.isTeamMember ? '[Team Member]' : ''}
