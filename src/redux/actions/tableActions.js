@@ -279,7 +279,7 @@ export const unAllotInvigilator = (data, row, col, invigilatorData) => async (di
 	dispatch({ type: UNALLOT_INVIGILATOR, payload: rows });
 };
 
-export const updateInvigilator = (data, row, col, invigilatorData) => async (dispatch, getState) => {
+export const updateInvigilator = (data, row, col, invigilatorData, capacity) => async (dispatch, getState) => {
 	const rows = getState().table.rows;
 	let blocks = rows[row].data[col];
 	let currCourse = {};
@@ -291,8 +291,7 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 		});
 	});
 	invigilatorData.invigilator.assignedDuties++;
-	console.log(invigilatorData);
-
+	// console.log(capacity);
 	let room = currCourse.exam_rooms.findIndex((o) => (o.name || o.room.name) === invigilatorData.classroom.name);
 	invigilatorData.classroom.room_id = invigilatorData.classroom.id;
 	invigilatorData.classroom.exam_id = currCourse.id;
@@ -317,6 +316,7 @@ export const updateInvigilator = (data, row, col, invigilatorData) => async (dis
 				schedule_id: currCourse.schedule_id,
 			},
 		];
+		classroom.allotedCapacity = capacity;
 		currCourse.exam_rooms.push(classroom);
 	}
 	dispatch({ type: UPDATE_INVIGILATOR, payload: rows });

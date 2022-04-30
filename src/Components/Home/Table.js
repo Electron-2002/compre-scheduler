@@ -29,6 +29,7 @@ const MainTable = () => {
 	const dates = table.dates;
 	const invigilators = table.invigilators;
 	const slots = table.slots;
+	const classrooms = table.rooms;
 
 	return (
 		<TableContainer style={{ height: 'calc(100vh - 64px)' }} component={Paper}>
@@ -77,18 +78,19 @@ const MainTable = () => {
 								</TableCell>
 								{rows?.map((row, j) => {
 									const invId = invigilators.map((inv) => inv.id);
-
+									const roomId = classrooms.map((room)=>room.id);
 									let allotedList = [];
+									let allotedRooms = [];
 									for (const group of row.data[i]) {
 										group.courses.forEach((course) => {
 											course.exam_rooms.forEach((room) => {
+												allotedRooms = [...allotedRooms, room];
 												room.invigilatorsAlloteds.forEach((inv) => {
 													allotedList = [...allotedList, inv.invigilator];
 												});
 											});
 										});
 									}
-
 									const allotedId = allotedList.map((alloted) => alloted.id);
 									const finalList = [];
 									invId.forEach((x, i) => {
@@ -100,6 +102,10 @@ const MainTable = () => {
 											}
 										}
 									});
+
+									// console.log(allotedRooms);
+
+									const finalClassrooms = classrooms;
 
 									return (
 										<TableCell className="styledTableCell min-width-200" key={j}>
@@ -113,6 +119,7 @@ const MainTable = () => {
 																row={j}
 																col={i}
 																invList={finalList}
+																classrooms={finalClassrooms}
 															/>
 														)
 													);

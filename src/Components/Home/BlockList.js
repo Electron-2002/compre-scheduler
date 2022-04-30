@@ -5,7 +5,7 @@ import { ItemTypes } from '../../utils/items';
 import Block from './Block';
 import './BlockList.css';
 
-const BlockList = ({ courses, row, col, invList }) => {
+const BlockList = ({ courses, row, col, invList, classrooms }) => {
 	const [{ isDragging }, drag] = useDrag({
 		item: {
 			type: ItemTypes.LIST,
@@ -19,7 +19,6 @@ const BlockList = ({ courses, row, col, invList }) => {
 	});
 
 	const [toggle, setToggle] = useState(true);
-
 	return (
 		<div className="sidebar-content" ref={drag} style={{ opacity: isDragging ? '0.5' : '1' }}>
 			<div className="sidebar-slots">
@@ -30,7 +29,7 @@ const BlockList = ({ courses, row, col, invList }) => {
 			</div>
 			{toggle &&
 				courses.map((course, j) => {
-					return !course.state ? <Block data={course} row={row} col={col} key={j} invList={invList} /> : null;
+					return !course.state ? <Block data={course} row={row} col={col} key={j} classrooms={classrooms} invList={invList} /> : null;
 				})}
 		</div>
 	);

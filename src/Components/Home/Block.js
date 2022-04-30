@@ -13,15 +13,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
+const InvigilatorSelect = ({ data, row, col, invList, teamList, classrooms, courseCapacity,allotedCapacity }) => {
 	const [invigilatorData, setInvigilatorData] = useState({});
+	const [capacity, setCapacity] = useState(0);
 	const invigilatorRef = useRef();
 	const classroomRef = useRef();
 	const dispatch = useDispatch();
 
-	const classrooms = useSelector((state) => state.table.rooms);
-	const dates = useSelector((state) => state.table.dates);
+	let requiredCapacity = courseCapacity - allotedCapacity;
+	console.log({courseCapacity, allotedCapacity});
 
+	// const classrooms = useSelector((state) => state.table.rooms);
+	const dates = useSelector((state) => state.table.dates);
 	let allotedArr = [];
 	{
 		data.exam_rooms.map((i, k) => {
@@ -129,7 +132,10 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 				ref={invigilatorRef}
 				onChange={(e) => {
 					let room = classrooms.find((i) => i.id === e.target.value);
+					let remainingCapacity = +room.capacity - (room.allotedCapacity?room.allotedCapacity:0);
+					console.log({remainingCapacity, requiredCapacity})
 					setInvigilatorData({ ...invigilatorData, classroom: room });
+					setCapacity(requiredCapacity>remainingCapacity?remainingCapacity:requiredCapacity);
 				}}
 			>
 				<option value="null">-----------</option>
@@ -141,10 +147,10 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 			</select>
 			<IconButton
 				style={{ width: '5%' }}
-				aria-label="delete"
+				aria-label="allot"
 				onClick={() => {
 					if (!invigilatorData.invigilator) return;
-					dispatch(updateInvigilator(data, row, col, invigilatorData));
+					dispatch(updateInvigilator(data, row, col, invigilatorData, capacity));
 					setInvigilatorData(() => {});
 					invigilatorRef.current.value = null;
 					classroomRef.current.value = null;
@@ -157,7 +163,7 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 	);
 };
 
-const Block = ({ data, row, col, invList }) => {
+const Block = ({ data, row, col, invList, classrooms }) => {
 	const dispatch = useDispatch();
 	const [{ isDragging }, drag] = useDrag({
 		item: {
@@ -176,12 +182,16 @@ const Block = ({ data, row, col, invList }) => {
 	let totalInvigilatorsAlloted = 0;
 	let allotedCapacity = 0;
 	data.exam_rooms.forEach((i) => {
+		console.log(i);
+		// let remainingCapacity = +i.capacity - (i.allotedCapacity?i.allotedCapacity:0);
+		// if (remainingCapacity==0) remainingCapacity = +i.capacity;
 		totalInvigilatorsAlloted += i.invigilatorsAlloteds?.length;
-		allotedCapacity += +i.capacity;
+		allotedCapacity += i.allotedCapacity;
+		console.log({allotedCapacity});
 	});
 
-	if (allotedCapacity > data.course.capacity) allotedCapacity = data.course.capacity;
-
+	// if (allotedCapacity > data.course.capacity) allotedCapacity = data.course.capacity;
+	// console.log(data.course.capacity-allotedCapacity);
 	return (
 		<Box
 			ref={drag}
@@ -225,6 +235,9 @@ const Block = ({ data, row, col, invList }) => {
 						data={data}
 						teamList={data.course.invigilators}
 						invList={invList}
+						classrooms={classrooms}
+						courseCapacity={data.course.capacity}
+						allotedCapacity={allotedCapacity}
 					/>
 				</div>
 			) : null}
