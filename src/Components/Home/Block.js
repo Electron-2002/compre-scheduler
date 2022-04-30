@@ -13,18 +13,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
+const InvigilatorSelect = ({ data, row, col, invList, teamList, roomList }) => {
 	const [invigilatorData, setInvigilatorData] = useState({});
+	const [roomData, setRoomData] = useState({});
 	const invigilatorRef = useRef();
 	const classroomRef = useRef();
 	const dispatch = useDispatch();
 
-	const classrooms = useSelector((state) => state.table.rooms);
+	const classrooms = roomList;
 	const dates = useSelector((state) => state.table.dates);
 
 	let allotedArr = [];
 	{
 		data.exam_rooms.map((i, k) => {
+			console.log(i);
 			i.invigilatorsAlloteds.map((j) => {
 				allotedArr.push({
 					invigilator: j.invigilator?.name || j.name,
@@ -157,7 +159,7 @@ const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
 	);
 };
 
-const Block = ({ data, row, col, invList }) => {
+const Block = ({ data, row, col, invList, roomList }) => {
 	const dispatch = useDispatch();
 	const [{ isDragging }, drag] = useDrag({
 		item: {
@@ -225,6 +227,7 @@ const Block = ({ data, row, col, invList }) => {
 						data={data}
 						teamList={data.course.invigilators}
 						invList={invList}
+						roomList={roomList}
 					/>
 				</div>
 			) : null}

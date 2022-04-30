@@ -5,7 +5,7 @@ import { ItemTypes } from '../../utils/items';
 import Block from './Block';
 import './BlockList.css';
 
-const BlockList = ({ courses, row, col, invList }) => {
+const BlockList = ({ courses, row, col, invList, roomList }) => {
 	const [{ isDragging }, drag] = useDrag({
 		item: {
 			type: ItemTypes.LIST,
@@ -30,7 +30,7 @@ const BlockList = ({ courses, row, col, invList }) => {
 			</div>
 			{toggle &&
 				courses.map((course, j) => {
-					return !course.state ? <Block data={course} row={row} col={col} key={j} invList={invList} /> : null;
+					return !course.state ? <Block data={course} row={row} col={col} key={j} invList={invList} roomList={roomList} /> : null;
 				})}
 		</div>
 	);

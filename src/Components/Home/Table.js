@@ -29,6 +29,7 @@ const MainTable = () => {
 	const dates = table.dates;
 	const invigilators = table.invigilators;
 	const slots = table.slots;
+	const rooms = table.rooms;
 
 	return (
 		<TableContainer style={{ height: 'calc(100vh - 64px)' }} component={Paper}>
@@ -70,6 +71,20 @@ const MainTable = () => {
 
 						const dayAllottedId = dayAllotedList.map((dayAlloted) => dayAlloted.id);
 
+						let dayRoomsAlloted = [];
+
+						for (let rIndex = 0; rIndex < rows.length; rIndex++) {
+							for (const group of rows[rIndex].data[i]) {
+								group.courses.forEach((course) => {
+									course.exam_rooms.forEach((room) => {
+										dayRoomsAlloted = [...dayRoomsAlloted, room];
+									});
+								});
+							}
+						}
+
+						const dayRoomAllottedId = dayRoomsAlloted.map((dayAlloted) => dayAlloted.room_id ? dayAlloted.room_id : dayAlloted.room.id);
+
 						return (
 							<TableRow key={i}>
 								<TableCell className="styledTableCell" align="center">
@@ -101,6 +116,36 @@ const MainTable = () => {
 										}
 									});
 
+									const roomId = rooms.map((room)=>room.id);
+
+									let allotedRoomList = [];
+									for (const group of row.data[i]) {
+										group.courses.forEach((course) => {
+											course.exam_rooms.forEach((room) => {
+												allotedRoomList = [...allotedRoomList, room];
+											});
+										});
+									}
+
+									const allotedRoomId = allotedRoomList.map((alloted) => alloted.room_id ? alloted.room_id :alloted.room.id);
+		
+
+									const finalRooms=[];
+
+									roomId.forEach((x, i) => {
+										if (!allotedRoomId.includes(x)) {
+											if(rooms[i].name=="No Classroom"){}
+											else if (dayRoomAllottedId.includes(x)) {
+												finalRooms.push({ ...rooms[i], alreadyAllotted: true });
+											} else {
+												finalRooms.push(rooms[i]);
+											}
+										}
+										if(rooms[i].name=="No Classroom") finalRooms.push(rooms[i]);
+									});
+
+									// console.log({finalRooms, finalList});
+
 									return (
 										<TableCell className="styledTableCell min-width-200" key={j}>
 											<BlockTarget row={j} col={i} target="table" className="blockTarget">
@@ -113,6 +158,7 @@ const MainTable = () => {
 																row={j}
 																col={i}
 																invList={finalList}
+																roomList={finalRooms}
 															/>
 														)
 													);
