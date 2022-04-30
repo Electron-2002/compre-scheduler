@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unAllotInvigilator, updateInvigilator } from '../../redux/actions/tableActions';
 import './Block.css';
 
-const InvigilatorSelect = ({ data, row, col, invList, teamList }) => {
+const InvigilatorSelect = ({ data, row, col, invList = [], teamList }) => {
 	const [invigilatorData, setInvigilatorData] = useState({});
 	const invigilatorRef = useRef();
 	const classroomRef = useRef();
